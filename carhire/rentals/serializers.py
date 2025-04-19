@@ -1,19 +1,19 @@
 from rest_framework import serializers
-from .models import User, Car_Model, Booking, payment_model
+from .models import User, CarModel, Booking, PaymentModel
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-class Car_ModelSerializer(serializers.ModelSerializer):
+class CarModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Car_Model
+        model = CarModel
         fields = '__all__'        
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking     
         fields = '__all__'
-class payment_modelSerializer(serializers.ModelSerializer):
+class PaymentModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = payment_model   
+        model = PaymentModel   
         fields = '__all__'
                         
