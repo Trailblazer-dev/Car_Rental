@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Search, Filter, Calendar } from 'lucide-react';
 import CarCard from '../../components/cars/CarCard';
-import carService, { Car } from '../../services/carService';
+import carService from '../../services/carService';
+import type { Car } from '../../services/carService';
 
 const CarsPage = () => {
   const [cars, setCars] = useState<Car[]>([]);
