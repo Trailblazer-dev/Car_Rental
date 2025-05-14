@@ -7,4 +7,5 @@
   }
 
   body {
-    @apply font-sans bg-white text-gray-
+    @apply font-sans bg-white text-gray-800;
+}
