@@ -1,3 +1,103 @@
+# CarHire Frontend
+
+This is the frontend application for the CarHire project - a car rental service that allows users to browse, book, and manage car rentals.
+
+## MVP Features Implemented
+
+- ✅ User authentication (login/signup)
+- ✅ Car browsing and filtering
+- ✅ Car detail views
+- ✅ Responsive design for all device sizes
+- ✅ Integration with the Django backend API
+
+## Tech Stack
+
+- **React** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **React Router** - Navigation
+- **Axios** - API requests
+- **TailwindCSS** - Styling
+- **Lucide React** - Icons
+
+## Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v14 or higher)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- Backend server running (see backend setup instructions)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/car_rental.git
+   cd car_rental/frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+The application will be available at [http://localhost:5173](http://localhost:5173).
+
+## Project Structure
+
+```
+frontend/
+├── src/
+│   ├── assets/         # Static assets (images, etc.)
+│   ├── components/     # Reusable UI components
+│   │   ├── cars/       # Car-related components
+│   │   └── layout/     # Layout components (navbar, footer)
+│   ├── pages/          # Application pages
+│   │   ├── auth/       # Authentication pages
+│   │   └── cars/       # Car-related pages
+│   ├── services/       # API services
+│   ├── App.tsx         # Main application component
+│   └── main.tsx        # Application entry point
+├── public/             # Public assets
+└── ...config files     # Various configuration files
+```
+
+## Available Scripts
+
+- `npm run dev` - Start the development server
+- `npm run build` - Build the application for production
+- `npm run lint` - Run ESLint to check for code issues
+- `npm run preview` - Preview the production build locally
+
+## Backend Integration
+
+The frontend connects to a Django REST API backend. Key integration points:
+
+- Authentication using JWT tokens
+- Car data fetching and filtering
+- Booking management
+
+## Next Steps
+
+Planned features for future development:
+
+1. User dashboard for managing bookings
+2. Payment integration
+3. Owner portal for car owners to list vehicles
+4. Admin dashboard
+5. Reviews and ratings system
+
+## Original Vite Documentation
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
