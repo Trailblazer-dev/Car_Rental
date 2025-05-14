@@ -37,7 +37,7 @@ const AboutPage = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <div className="bg-primary-light rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
               <Clock className="text-white" size={24} />
@@ -89,7 +89,7 @@ const AboutPage = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           <div className="bg-white rounded-lg overflow-hidden shadow-md">
             <img 
               src="/src/assets/ceo.jpg" 

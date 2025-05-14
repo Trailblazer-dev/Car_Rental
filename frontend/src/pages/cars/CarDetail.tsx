@@ -193,7 +193,7 @@ const CarDetail = () => {
         
         {/* Booking Form Column */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
+          <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
             <h2 className="text-xl font-bold mb-4 pb-4 border-b">Booking Details</h2>
             
             <div className="mb-6">

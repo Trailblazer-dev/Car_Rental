@@ -40,22 +40,22 @@ const CarCard = ({
   };
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-lg transition-transform hover:-translate-y-1 hover:shadow-xl">
+    <div className="bg-white rounded-xl overflow-hidden shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl border border-gray-100 hover:border-primary/30 duration-200">
       {/* Car Image */}
       <div className="relative">
         <img 
           src={imageSrc}
           alt={`${make} ${model}`} 
-          className="w-full h-48 object-cover"
+          className="w-full h-48 object-cover transition-all duration-200"
           onError={handleImageError}
         />
         {/* Availability Badge */}
         {availability ? (
-          <span className="absolute top-3 right-3 bg-green-500 text-white px-2 py-1 text-xs rounded-full">
+          <span className="absolute top-3 right-3 bg-green-500 text-white px-2 py-1 text-xs rounded-full shadow">
             Available
           </span>
         ) : (
-          <span className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 text-xs rounded-full">
+          <span className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 text-xs rounded-full shadow">
             Unavailable
           </span>
         )}
@@ -63,25 +63,25 @@ const CarCard = ({
 
       {/* Car Details */}
       <div className="p-4">
-        <h3 className="text-xl font-bold">{make} {model}</h3>
+        <h3 className="text-xl font-bold mb-1">{make} {model}</h3>
         
-        <div className="flex items-center mt-1 text-gray-600">
+        <div className="flex items-center mt-1 text-gray-600 gap-2">
           <Calendar size={16} className="mr-1" />
           <span className="text-sm">{year}</span>
         </div>
 
-        <div className="flex items-center mt-2 text-gray-600">
+        <div className="flex items-center mt-2 text-gray-600 gap-2">
           <MapPin size={16} className="mr-1" />
           <span className="text-sm">{location}</span>
         </div>
 
         {/* Additional Features (optional) */}
         <div className="flex justify-between mt-3">
-          <div className="flex items-center text-gray-600">
+          <div className="flex items-center text-gray-600 gap-1">
             <Users size={16} className="mr-1" />
             <span className="text-sm">5 seats</span>
           </div>
-          <div className="flex items-center text-gray-600">
+          <div className="flex items-center text-gray-600 gap-1">
             <Gauge size={16} className="mr-1" />
             <span className="text-sm">Auto</span>
           </div>
@@ -93,7 +93,7 @@ const CarCard = ({
           
           <Link 
             to={`/cars/${id}`} 
-            className="btn-primary py-2 px-4 text-sm"
+            className="btn-primary py-2 px-4 text-sm shadow"
           >
             View Details
           </Link>

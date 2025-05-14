@@ -3,23 +3,23 @@ import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react'
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white pt-12 pb-8">
+    <footer className="bg-gray-900 text-white pt-12 pb-8 mt-12">
       <div className="container-custom">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-xl font-bold mb-4 text-white">CarHire</h3>
+            <h3 className="text-xl font-extrabold mb-4 text-white tracking-tight">CarHire</h3>
             <p className="text-gray-400 mb-4">
               Premium car rental service providing you with the best vehicles for your journey.
             </p>
             <div className="flex space-x-4">
-              <a href="https://facebook.com" className="text-gray-400 hover:text-primary">
+              <a href="https://facebook.com" className="text-gray-400 hover:text-primary transition-colors" aria-label="Facebook">
                 <Facebook size={20} />
               </a>
-              <a href="https://instagram.com" className="text-gray-400 hover:text-primary">
+              <a href="https://instagram.com" className="text-gray-400 hover:text-primary transition-colors" aria-label="Instagram">
                 <Instagram size={20} />
               </a>
-              <a href="https://twitter.com" className="text-gray-400 hover:text-primary">
+              <a href="https://twitter.com" className="text-gray-400 hover:text-primary transition-colors" aria-label="Twitter">
                 <Twitter size={20} />
               </a>
             </div>
@@ -30,19 +30,19 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4 text-white">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-400 hover:text-primary">Home</Link>
+                <Link to="/" className="text-gray-400 hover:text-primary transition-colors">Home</Link>
               </li>
               <li>
-                <Link to="/cars" className="text-gray-400 hover:text-primary">Browse Cars</Link>
+                <Link to="/cars" className="text-gray-400 hover:text-primary transition-colors">Browse Cars</Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-400 hover:text-primary">About Us</Link>
+                <Link to="/about" className="text-gray-400 hover:text-primary transition-colors">About Us</Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-400 hover:text-primary">Contact</Link>
+                <Link to="/contact" className="text-gray-400 hover:text-primary transition-colors">Contact</Link>
               </li>
               <li>
-                <Link to="/faq" className="text-gray-400 hover:text-primary">FAQ</Link>
+                <Link to="/faq" className="text-gray-400 hover:text-primary transition-colors">FAQ</Link>
               </li>
             </ul>
           </div>
@@ -70,15 +70,15 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-4 text-white">Newsletter</h3>
             <p className="text-gray-400 mb-4">Subscribe to receive updates on new cars and special offers.</p>
-            <form className="flex flex-col space-y-2">
+            <form className="flex flex-col sm:flex-row gap-2">
               <input
                 type="email"
                 placeholder="Your email"
-                className="px-4 py-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
+                className="px-4 py-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white flex-1"
               />
               <button
                 type="submit"
-                className="bg-primary text-white py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-dark transition-colors"
               >
                 Subscribe
               </button>
@@ -86,7 +86,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500">
+        <div className="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
           <p>&copy; {new Date().getFullYear()} CarHire. All rights reserved.</p>
         </div>
       </div>

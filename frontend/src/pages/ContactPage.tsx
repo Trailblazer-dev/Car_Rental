@@ -157,7 +157,7 @@ const ContactPage = () => {
               <img 
                 src="/src/assets/map.jpg" 
                 alt="Office location map" 
-                className="w-full h-auto"
+                className="w-full h-48 object-cover"
                 onError={(e) => {
                   e.currentTarget.src = "https://placehold.co/600x400?text=Location+Map";
                 }}

@@ -5,11 +5,15 @@ const LandingPage = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary-dark/95 to-primary py-20">
-        <div className="container-custom">
+      <section className="bg-gradient-to-r from-primary-dark/95 to-primary py-20 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="w-96 h-96 bg-primary-light/20 rounded-full blur-3xl absolute -top-32 -left-32"></div>
+          <div className="w-80 h-80 bg-primary/10 rounded-full blur-2xl absolute -bottom-20 right-0"></div>
+        </div>
+        <div className="container-custom relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-lg">
                 Find Your Perfect Ride for Any Occasion
               </h1>
               <p className="text-lg text-secondary mb-8">
@@ -17,10 +21,10 @@ const LandingPage = () => {
                 Safe, reliable, and affordable car rentals.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/cars" className="bg-white text-primary font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors text-center">
+                <Link to="/cars" className="bg-white text-primary font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors text-center shadow">
                   Browse Cars
                 </Link>
-                <Link to="/signup" className="border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-primary transition-colors text-center">
+                <Link to="/signup" className="border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-primary transition-colors text-center shadow">
                   Sign Up
                 </Link>
               </div>
@@ -29,7 +33,7 @@ const LandingPage = () => {
               <img 
                 src="/src/assets/hero.png" 
                 alt="Luxury car" 
-                className="w-full h-auto rounded-lg shadow-xl"
+                className="w-full h-auto rounded-lg shadow-2xl"
                 onError={(e) => {
                   // Try a specific fallback image from assets folder
                   e.currentTarget.src = "/src/assets/car-placeholder.jpg";
@@ -96,7 +100,7 @@ const LandingPage = () => {
       <section className="py-16 bg-gray-50">
         <div className="container-custom">
           <h2 className="text-3xl font-bold text-center mb-12">Why Choose Us</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
               <div className="mx-auto w-16 h-16 bg-primary-light rounded-full flex items-center justify-center mb-4">
                 <Clock size={32} className="text-white" />
@@ -132,7 +136,7 @@ const LandingPage = () => {
       <section className="py-16 bg-white">
         <div className="container-custom">
           <h2 className="text-3xl font-bold text-center mb-12">Our Popular Cars</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <div className="bg-white p-4 rounded-lg shadow-md overflow-hidden">
               <img 
                 src="/src/assets/car2.png" 
@@ -192,7 +196,7 @@ const LandingPage = () => {
           </div>
           
           <div className="text-center mt-10">
-            <Link to="/cars" className="btn-primary inline-block">
+            <Link to="/cars" className="btn-primary inline-block shadow">
               View All Cars
             </Link>
           </div>
