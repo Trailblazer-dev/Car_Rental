@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, Gauge, CheckCircle, Clock, AlertCircle } from 'lucide-react';
-import carService, { Car } from '@/services/carService';
+import carService from '@/services/carService';
+import type { Car } from '@/services/carService';
 import { getImageUrl } from '@/services/api';
 
 const CarDetail = () => {
