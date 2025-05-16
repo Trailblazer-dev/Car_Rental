@@ -20,54 +20,42 @@ export default defineConfig({
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
       // React module resolution fixes for Azure SWA
-      'react': resolve(__dirname, './src/react'),
-      'react/jsx-runtime': resolve(__dirname, './src/react/jsx-runtime.ts')
+      'react': 'react',
+      'react-dom': resolve(__dirname, './src/react-dom.js'),
+      'react-dom/client': resolve(__dirname, './src/react-dom.js')
     },
     dedupe: ['react', 'react-dom'],
-    mainFields: ['browser', 'module', 'main'],
+    mainFields: ['browser', 'module', 'main', 'jsnext:main'],
   },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    cssCodeSplit: true,
-    // Change from 'terser' to 'esbuild' which is built-in
     minify: 'esbuild',
     commonjsOptions: {
       transformMixedEsModules: true,
-      include: [/node_modules/]
+      include: [/node_modules/],
+      // Explicitly add React DOM to include paths
+      requireReturnsDefault: 'auto',
     },
     rollupOptions: {
+      external: [],
       plugins: [
         nodeResolve({
           extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
           browser: true,
-          preferBuiltins: false
+          preferBuiltins: false,
+          // Explicitly include node_modules
+          moduleDirectories: ['node_modules']
         }),
         commonjs({
-          include: /node_modules/,
-          requireReturnsDefault: 'auto'
+          include: [/node_modules/],
+          transformMixedEsModules: true
         })
       ],
       output: {
-        // Create separate chunks for better caching
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('scheduler') || id.includes('object-assign')) {
-              return 'vendor-react';
-            }
-            if (id.includes('lucide')) {
-              return 'vendor-ui';
-            }
-            if (id.includes('react-router') || id.includes('react-dom')) {
-              return 'vendor-router';
-            }
-            return 'vendor'; // all other packages
-          }
-        },
-        // Ensure consistent output format
+        // Remove manualChunks to simplify the build
         format: 'es'
-      },
-      external: []
+      }
     }
   },
   // This ensures the public directory is properly copied to the build output

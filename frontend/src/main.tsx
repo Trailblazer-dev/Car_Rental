@@ -1,6 +1,5 @@
 import { StrictMode } from 'react'
-// Import directly from react-dom-fix
-import { createRoot } from './react-dom-fix'
+import ReactDOM from 'react-dom'
 import {
   createBrowserRouter,
   RouterProvider
@@ -26,9 +25,10 @@ if (!rootElement) {
   throw new Error("Root element not found. Make sure there is an element with id 'root'");
 }
 
-// Create a root and render the app
-createRoot(rootElement).render(
+// Use standard ReactDOM render for simplicity
+ReactDOM.render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>,
-)
+  rootElement
+);
