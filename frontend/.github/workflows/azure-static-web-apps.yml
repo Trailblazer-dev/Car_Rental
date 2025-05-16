@@ -26,15 +26,18 @@ jobs:
           cache: 'npm'
           cache-dependency-path: './frontend/package-lock.json'
       
-      # Create the react-runtime-fix.ts file
-      - name: Create React runtime fix file
+      # Apply React fixes for Azure Static Web Apps
+      - name: Create React Fix Files
         working-directory: ./frontend
         run: |
           mkdir -p src
-          cat > src/react-runtime-fix.ts << 'EOL'
+          node -e "
+          const fs = require('fs');
+          
+          // React Runtime Fix
+          fs.writeFileSync('src/react-runtime-fix.ts', \`
           /**
            * Unified React runtime fix for Azure Static Web Apps deployment
-           * This file handles both React and ReactDOM runtime exports
            */
           import * as React from 'react';
           import * as ReactDOM from 'react-dom';
@@ -43,14 +46,15 @@ jobs:
           export const {
             useState, useEffect, useContext, useReducer, useCallback, useMemo, useRef,
             createContext, createElement, cloneElement, createRef, Component, PureComponent,
-            Children, Fragment, isValidElement, forwardRef, memo,
+            Children, isValidElement, forwardRef, memo,
             useLayoutEffect, useImperativeHandle, useDebugValue
           } = React;
           
-          // Export React JSX runtime functions
+          // Export React JSX runtime functions explicitly
           export const jsx = React.createElement;
           export const jsxs = React.createElement;
           export const jsxDEV = React.createElement;
+          export const Fragment = React.Fragment;
           
           // Export ReactDOM APIs
           export const {
@@ -58,9 +62,9 @@ jobs:
           } = ReactDOM;
           
           // Create React 18 compatible APIs
-          export const createRoot = (container: Element | DocumentFragment) => {
+          export const createRoot = (container) => {
             return {
-              render(element: React.ReactNode) {
+              render(element) {
                 ReactDOM.render(element, container);
               },
               unmount() {
@@ -69,7 +73,7 @@ jobs:
             };
           };
           
-          export const hydrateRoot = (container: Element | DocumentFragment, element: React.ReactNode) => {
+          export const hydrateRoot = (container, element) => {
             ReactDOM.hydrate(element, container);
             return {
               unmount() {
@@ -80,8 +84,17 @@ jobs:
           
           // Default exports
           export default React;
-          export const ReactDOMDefault = ReactDOM;
-          EOL
+          export { ReactDOM };
+          \`);
+          
+          // JSX Runtime redirect
+          fs.writeFileSync('src/jsx-runtime.ts', \`
+          // Redirect file for jsx-runtime
+          export * from './react-runtime-fix';
+          \`);
+          
+          console.log('React fix files created successfully');
+          "
       
       # Clean install dependencies with specific flags
       - name: Install dependencies
@@ -111,6 +124,7 @@ jobs:
         env:
           CI: false
           NODE_ENV: production
+          VITE_BUILD_MODE: azure
       
       # Copy the static web app config to dist
       - name: Copy SWA config

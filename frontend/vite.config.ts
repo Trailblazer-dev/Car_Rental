@@ -19,7 +19,7 @@ export default defineConfig({
       '@services': resolve(__dirname, './src/services'),
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
-      // Use a single runtime fix file for all React-related modules
+      // Ensure all React imports are consolidated through our runtime fix
       'react': resolve(__dirname, './src/react-runtime-fix.ts'),
       'react-dom': resolve(__dirname, './src/react-runtime-fix.ts'),
       'react-dom/client': resolve(__dirname, './src/react-runtime-fix.ts'),

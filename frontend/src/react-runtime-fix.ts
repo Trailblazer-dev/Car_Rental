@@ -1,6 +1,7 @@
 /**
  * Unified React runtime fix for Azure Static Web Apps deployment
- * This file handles both React and ReactDOM runtime exports
+ * This file handles both React and ReactDOM runtime exports,
+ * including JSX runtime
  */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -13,10 +14,11 @@ export const {
   useLayoutEffect, useImperativeHandle, useDebugValue
 } = React;
 
-// Export React JSX runtime functions
+// Export React JSX runtime functions explicitly - these are critical
 export const jsx = React.createElement;
 export const jsxs = React.createElement;
 export const jsxDEV = React.createElement;
+export const Fragment = React.Fragment;
 
 // Export ReactDOM APIs
 export const {
@@ -46,4 +48,4 @@ export const hydrateRoot = (container: Element | DocumentFragment, element: Reac
 
 // Default exports
 export default React;
-export const ReactDOMDefault = ReactDOM;
+export { ReactDOM };

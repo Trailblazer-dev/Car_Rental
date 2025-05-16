@@ -4,9 +4,10 @@
     "car-rental-app": {
       "appLocation": ".",
       "outputLocation": "dist",
-      "appBuildCommand": "npm run build",
+      "appBuildCommand": "npm run build:azure",
       "run": "npm run dev",
-      "appDevserverUrl": "http://localhost:5173"
+      "appDevserverUrl": "http://localhost:5173",
+      "apiDevserverUrl": "http://localhost:8000"
     }
   }
 }

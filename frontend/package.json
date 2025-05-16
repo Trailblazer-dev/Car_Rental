@@ -11,12 +11,13 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "clean": "rm -rf node_modules package-lock.json dist",
-    "swa:start": "swa start",
+    "swa:start": "npx swa start",
     "swa:build": "node scripts/azure-build.js",
-    "swa:deploy": "swa deploy",
+    "swa:deploy": "npx swa deploy --env production",
     "swa:build:clean": "npm run clean && npm install --no-audit --no-fund && npm run swa:build",
-    "swa:config": "swa init",
-    "build:azure": "node scripts/azure-build.js"
+    "swa:init": "npx swa init --yes",
+    "build:azure": "node scripts/azure-build.js",
+    "swa:local": "npx swa start http://localhost:5173 --run 'npm run dev'"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^24.1.0",
