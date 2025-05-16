@@ -1,0 +1,165 @@
+name: Azure Static Web Apps CI/CD (Simplified)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+
+jobs:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
+      
+      # Install dependencies with specific flags for better compatibility
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: |
+          npm ci --legacy-peer-deps --no-audit --no-fund
+      
+      # Create React shim files
+      - name: Create React shim files
+        working-directory: ./frontend
+        run: |
+          # Create JSX Runtime shim
+          cat > src/jsx-runtime.js << 'EOL'
+          /**
+           * React JSX Runtime shim for Azure Static Web Apps
+           */
+          import * as React from 'react';
+          
+          // Export JSX functions
+          export const jsx = React.createElement;
+          export const jsxs = React.createElement;
+          export const Fragment = React.Fragment;
+          
+          // Default export
+          export default {
+            jsx,
+            jsxs,
+            Fragment
+          };
+          EOL
+          
+          # Create JSX Dev Runtime shim
+          cat > src/jsx-dev-runtime.js << 'EOL'
+          /**
+           * React JSX Dev Runtime shim for Azure Static Web Apps
+           */
+          import * as React from 'react';
+          
+          // Export JSX Dev functions
+          export const jsxDEV = React.createElement;
+          export const jsxs = React.createElement;
+          export const Fragment = React.Fragment;
+          
+          // Default export
+          export default {
+            jsxDEV,
+            jsxs,
+            Fragment
+          };
+          EOL
+          
+          # Create React DOM shim
+          cat > src/react-dom.js << 'EOL'
+          /**
+           * React DOM shim for Azure Static Web Apps
+           */
+          import * as ReactDOM from 'react-dom';
+          
+          // Re-export all ReactDOM methods
+          export const {
+            render,
+            hydrate,
+            unmountComponentAtNode,
+            findDOMNode,
+            createPortal
+          } = ReactDOM;
+          
+          // Polyfill for React 18 functionality if using older React
+          export const createRoot = (container) => {
+            return {
+              render(element) {
+                ReactDOM.render(element, container);
+              },
+              unmount() {
+                ReactDOM.unmountComponentAtNode(container);
+              }
+            };
+          };
+          
+          export const hydrateRoot = (container, element) => {
+            ReactDOM.hydrate(element, container);
+            return {
+              unmount() {
+                ReactDOM.unmountComponentAtNode(container);
+              }
+            };
+          };
+          
+          // Default export
+          export default ReactDOM;
+          EOL
+          
+          echo "React shim files created successfully!"
+      
+      # Run prebuild script
+      - name: Run prebuild script
+        working-directory: ./frontend
+        run: |
+          npm run prebuild || echo "Prebuild warning (continuing anyway)"
+      
+      # Build with simplified options
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: |
+          npx vite build --outDir dist
+        env:
+          NODE_ENV: production
+          VITE_DISABLE_CODE_SPLITTING: 'true'
+      
+      # Copy SWA config
+      - name: Copy SWA config
+        working-directory: ./frontend
+        run: |
+          cp staticwebapp.config.json dist/ || echo "{}" > dist/staticwebapp.config.json
+      
+      # Deploy to Azure
+      - name: Deploy to Azure Static Web Apps
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "frontend" 
+          output_location: "dist"
+          skip_app_build: true
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: "close"

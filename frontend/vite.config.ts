@@ -19,8 +19,9 @@ export default defineConfig({
       '@services': resolve(__dirname, './src/services'),
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
-      // React module resolution fixes for Azure SWA
-      'react': 'react',
+      // Direct alias for react/jsx-runtime
+      'react/jsx-runtime': resolve(__dirname, './src/jsx-runtime.js'),
+      'react/jsx-dev-runtime': resolve(__dirname, './src/jsx-dev-runtime.js'),
       'react-dom': resolve(__dirname, './src/react-dom.js'),
       'react-dom/client': resolve(__dirname, './src/react-dom.js')
     },
@@ -30,6 +31,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    cssCodeSplit: true,
     minify: 'esbuild',
     commonjsOptions: {
       transformMixedEsModules: true,
