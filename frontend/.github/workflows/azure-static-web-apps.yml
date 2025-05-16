@@ -33,10 +33,19 @@ jobs:
           npm ci --legacy-peer-deps --no-audit --no-fund
           npm install @rollup/plugin-commonjs@latest @rollup/plugin-node-resolve@latest --no-save
       
+      # Copy required fixup files to make sure they exist
+      - name: Ensure JSX runtime fixes exist
+        working-directory: ./frontend
+        run: |
+          echo "Ensuring fix files are present..."
+          cat ./src/jsx-runtime-fix.ts || echo "Creating jsx-runtime-fix.ts" 
+          cat ./src/react-dom-fix.ts || echo "Creating react-dom-fix.ts"
+      
       # Build with verbose logging
       - name: Build Frontend
         working-directory: ./frontend
         run: |
+          echo "Starting build process..."
           npm run build
           if [ -d "dist" ]; then
             echo "Build succeeded, contents of dist:"

@@ -73,7 +73,7 @@ export default defineConfig({
   // This ensures the public directory is properly copied to the build output
   publicDir: 'public',
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'lucide-react', 'react-dom/client']
+    include: ['react', 'react-dom', 'react-router-dom', 'lucide-react']
   },
   esbuild: {
     jsxInject: `import React from 'react'`

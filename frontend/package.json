@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "prebuild": "node scripts/copy-assets.js",
-    "build": "vite build --outDir dist --assetsDir assets --mode production",
+    "build": "vite build --outDir dist --assetsDir assets --emptyOutDir --mode production",
     "postbuild": "cp staticwebapp.config.json dist/",
     "lint": "eslint .",
     "preview": "vite preview",

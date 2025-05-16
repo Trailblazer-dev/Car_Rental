@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+// Import directly from our fixed file instead of react-dom/client
+import { createRoot } from './react-dom-fix'
 import {
   createBrowserRouter,
   RouterProvider

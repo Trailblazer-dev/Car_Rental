@@ -3,7 +3,27 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import * as ReactDOMClient from 'react-dom/client';
+
+// Define createRoot and hydrateRoot internally since we can't reliably import from react-dom/client
+const createRoot = (container: Element | DocumentFragment) => {
+  return {
+    render(element: React.ReactNode) {
+      ReactDOM.render(element, container);
+    },
+    unmount() {
+      ReactDOM.unmountComponentAtNode(container);
+    }
+  };
+};
+
+const hydrateRoot = (container: Element | DocumentFragment, element: React.ReactNode) => {
+  ReactDOM.hydrate(element, container);
+  return {
+    unmount() {
+      ReactDOM.unmountComponentAtNode(container);
+    }
+  };
+};
 
 // Define all JSX runtime functions needed
 export const jsx = React.createElement;
@@ -16,8 +36,7 @@ export const createContext = React.createContext;
 export const useId = React.useId;
 
 // React DOM specific exports
-export const createRoot = ReactDOMClient.createRoot;
-export const hydrateRoot = ReactDOMClient.hydrateRoot;
+export { createRoot, hydrateRoot };
 export const render = ReactDOM.render;
 export const hydrate = ReactDOM.hydrate;
 export const findDOMNode = ReactDOM.findDOMNode;

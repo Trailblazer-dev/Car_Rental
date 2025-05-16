@@ -1,7 +1,6 @@
 // This file ensures proper React DOM resolution
 // It's a workaround for "Could not resolve ./cjs/react-dom.production.min.js" error
 
-// Import ReactDOM directly rather than its subpaths
 import * as ReactDOM from 'react-dom';
 
 // Define client APIs manually
@@ -26,10 +25,7 @@ const hydrateRoot = (container: Element | DocumentFragment, element: React.React
 };
 
 // Re-export all React DOM APIs
-export {
-  createRoot, 
-  hydrateRoot
-};
+export { createRoot, hydrateRoot };
 
 // Re-export legacy APIs
 export const render = ReactDOM.render;
