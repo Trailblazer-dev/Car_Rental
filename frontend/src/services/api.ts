@@ -77,6 +77,11 @@ export const getImageUrl = (relativePath: string) => {
   
   // If it's a local asset path
   if (relativePath.startsWith('/src/') || relativePath.startsWith('@/')) {
+    // In production, these paths need to be handled differently
+    if (import.meta.env.PROD) {
+      const assetName = relativePath.split('/').pop();
+      return `/${assetName}`;
+    }
     return relativePath;
   }
   
