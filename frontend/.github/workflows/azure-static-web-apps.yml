@@ -26,126 +26,98 @@ jobs:
           cache: 'npm'
           cache-dependency-path: './frontend/package-lock.json'
       
+      # Install dependencies
       - name: Install dependencies
         working-directory: ./frontend
         run: |
           npm ci --legacy-peer-deps --no-audit --no-fund
       
-      - name: Prepare React files for Azure
+      # Create necessary React shim files
+      - name: Create React shim files
         working-directory: ./frontend
         run: |
-          # Create necessary directories
           mkdir -p src/react
+          
+          # Create React index file
+          cat > src/react/index.ts << 'EOL'
+          /**
+           * React shim for Azure Static Web Apps
+           * Re-exports all React APIs needed by dependencies
+           */
+          import * as React from 'react';
+          
+          // Re-export everything from React
+          export const {
+            useState, useEffect, useContext, useReducer, useCallback, useMemo, useRef,
+            createContext, createElement, cloneElement, createRef, Component, PureComponent,
+            Children, Fragment, isValidElement, forwardRef, memo,
+            useLayoutEffect, useImperativeHandle, useDebugValue
+          } = React;
+          
+          // Export JSX-specific functions
+          export const jsx = React.createElement;
+          export const jsxs = React.createElement;
+          export const jsxDEV = React.createElement;
+          
+          // Default export
+          export default React;
+          EOL
           
           # Create JSX runtime file
           cat > src/react/jsx-runtime.ts << 'EOL'
           /**
-           * JSX Runtime shim for React/JSX runtime resolution
+           * JSX Runtime shim for Azure Static Web Apps
            */
           import * as React from 'react';
           
+          // Export the specific JSX runtime APIs
           export const jsx = React.createElement;
           export const jsxs = React.createElement;
           export const Fragment = React.Fragment;
           
-          export default {
-            jsx,
-            jsxs,
-            Fragment
-          };
+          // Default export
+          export default { jsx, jsxs, Fragment };
           EOL
           
           # Create JSX dev runtime file
           cat > src/react/jsx-dev-runtime.ts << 'EOL'
           /**
-           * JSX Dev Runtime shim for React/JSX development runtime resolution
+           * JSX Dev Runtime shim for Azure Static Web Apps
            */
           import * as React from 'react';
           
+          // Export the specific JSX dev runtime APIs
           export const jsxDEV = React.createElement;
           export const jsxs = React.createElement;
           export const Fragment = React.Fragment;
           
-          export default {
-            jsxDEV,
-            jsxs,
-            Fragment
-          };
-          EOL
-          
-          # Create React index file
-          cat > src/react/index.ts << 'EOL'
-          /**
-           * React main module shim
-           */
-          import * as React from 'react';
-          export * from 'react';
-          export default React;
-          EOL
-          
-          # Create React DOM fix file
-          cat > src/react-dom-fix.ts << 'EOL'
-          /**
-           * ReactDOM shim for Azure Static Web Apps
-           */
-          import * as ReactDOM from 'react-dom';
-          
-          // Export standard ReactDOM APIs
-          export const {
-            render, hydrate, unmountComponentAtNode, findDOMNode, createPortal
-          } = ReactDOM;
-          
-          // Create React 18 compatible APIs for older React versions
-          export const createRoot = (container) => {
-            return {
-              render(element) {
-                ReactDOM.render(element, container);
-              },
-              unmount() {
-                ReactDOM.unmountComponentAtNode(container);
-              }
-            };
-          };
-          
-          export const hydrateRoot = (container, element) => {
-            ReactDOM.hydrate(element, container);
-            return {
-              unmount() {
-                ReactDOM.unmountComponentAtNode(container);
-              }
-            };
-          };
-          
           // Default export
-          export default ReactDOM;
+          export default { jsxDEV, jsxs, Fragment };
           EOL
+          
+          echo "React shim files created successfully!"
       
-      - name: Copy assets
+      # Run prebuild script
+      - name: Run prebuild script
         working-directory: ./frontend
         run: |
-          node scripts/copy-assets.js
+          npm run prebuild
       
-      - name: Build Frontend
+      # Build application
+      - name: Build application
         working-directory: ./frontend
         run: |
-          echo "Starting build process..."
-          npx vite build --outDir dist --assetsDir assets --emptyOutDir
-          if [ -d "dist" ]; then
-            echo "Build succeeded, contents of dist:"
-            ls -la dist
-          else
-            echo "Build failed - dist directory not found"
-            exit 1
-          fi
+          npx vite build
         env:
-          CI: false
           NODE_ENV: production
       
+      # Copy SWA config
       - name: Copy SWA config
         working-directory: ./frontend
         run: |
           cp staticwebapp.config.json dist/
       
+      # Deploy to Azure
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

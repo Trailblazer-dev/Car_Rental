@@ -16,7 +16,8 @@
     "swa:deploy": "npx swa deploy --env production",
     "swa:build:clean": "npm run clean && npm install --no-audit --no-fund && npm run swa:build",
     "swa:config": "npx swa init --yes",
-    "build:azure": "npm run swa:build",
+    "fix:react": "node scripts/fix-react-for-azure.js",
+    "build:azure": "node scripts/fix-react-for-azure.js && npm run prebuild && vite build",
     "prepare:swa": "node scripts/prepare-swa-build.js"
   },
   "dependencies": {
