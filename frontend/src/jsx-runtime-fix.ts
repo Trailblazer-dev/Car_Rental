@@ -3,10 +3,14 @@
 
 import * as React from 'react';
 
-// Re-export JSX runtime for correct resolution
+// Define all JSX runtime functions needed
 export const jsx = React.createElement;
 export const jsxs = React.createElement;
+export const jsxDEV = React.createElement;
 export const Fragment = React.Fragment;
 
+// Re-export all of React to ensure compatibility
+const ReactShim = { ...React, jsx, jsxs, jsxDEV, Fragment };
+
 // Export default React for components that need it
-export default React;
+export default ReactShim;
