@@ -1,8 +1,14 @@
 /**
- * JSX Runtime shim
- * This ensures proper import resolution for 'react/jsx-runtime'
+ * JSX Runtime shim for React/JSX runtime resolution
  */
-import { jsx, jsxs, Fragment } from '../react-runtime-fix';
+import * as React from 'react';
 
-export { jsx, jsxs, Fragment };
-export default { jsx, jsxs, Fragment };
+export const jsx = React.createElement;
+export const jsxs = React.createElement;
+export const Fragment = React.Fragment;
+
+export default {
+  jsx,
+  jsxs,
+  Fragment
+};

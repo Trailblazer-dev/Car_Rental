@@ -1,10 +1,14 @@
 /**
- * JSX Dev Runtime shim
- * This ensures proper import resolution for 'react/jsx-dev-runtime'
+ * JSX Dev Runtime shim for React/JSX development runtime resolution
  */
-import { jsx, jsxs, Fragment } from '../react-runtime-fix';
+import * as React from 'react';
 
-// jsxDEV is just an alias for jsx in production
-export const jsxDEV = jsx;
-export { jsxs, Fragment };
-export default { jsxDEV, jsxs, Fragment };
+export const jsxDEV = React.createElement;
+export const jsxs = React.createElement;
+export const Fragment = React.Fragment;
+
+export default {
+  jsxDEV,
+  jsxs,
+  Fragment
+};

@@ -12,15 +12,12 @@
     "preview": "vite preview",
     "clean": "rm -rf node_modules package-lock.json dist",
     "swa:start": "npx swa start",
-    "swa:build": "node scripts/azure-build.js",
+    "swa:build": "node scripts/prepare-swa-build.js && npm run prebuild && vite build --outDir dist --assetsDir assets && npm run postbuild",
     "swa:deploy": "npx swa deploy --env production",
     "swa:build:clean": "npm run clean && npm install --no-audit --no-fund && npm run swa:build",
-    "swa:init": "npx swa init --yes",
-    "prepare:azure": "node scripts/prepare-for-azure.js",
-    "build:azure": "npm run prepare:azure && npm run prebuild && vite build --outDir dist --assetsDir assets && npm run postbuild",
-    "swa:local": "npx swa start http://localhost:5173 --run 'npm run dev'",
-    "build:azure:simple": "node scripts/azure-simple-build.js",
-    "swa:build:simple": "node scripts/azure-simple-build.js"
+    "swa:config": "npx swa init --yes",
+    "build:azure": "npm run swa:build",
+    "prepare:swa": "node scripts/prepare-swa-build.js"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^24.1.0",

@@ -26,45 +26,76 @@ jobs:
           cache: 'npm'
           cache-dependency-path: './frontend/package-lock.json'
       
-      # Install dependencies
       - name: Install dependencies
         working-directory: ./frontend
         run: |
           npm ci --legacy-peer-deps --no-audit --no-fund
       
-      # Prepare React files for Azure
       - name: Prepare React files for Azure
         working-directory: ./frontend
         run: |
+          # Create necessary directories
           mkdir -p src/react
           
-          # Create React runtime fix
-          cat > src/react-runtime-fix.ts << 'EOL'
+          # Create JSX runtime file
+          cat > src/react/jsx-runtime.ts << 'EOL'
           /**
-           * Unified React runtime fix for Azure Static Web Apps deployment
+           * JSX Runtime shim for React/JSX runtime resolution
            */
           import * as React from 'react';
-          import * as ReactDOM from 'react-dom';
           
-          // Export all React APIs
-          export const {
-            useState, useEffect, useContext, useReducer, useCallback, useMemo, useRef,
-            createContext, createElement, cloneElement, createRef, Component, PureComponent,
-            Children, Fragment, isValidElement, forwardRef, memo,
-            useLayoutEffect, useImperativeHandle, useDebugValue
-          } = React;
-          
-          // Export React JSX runtime functions
           export const jsx = React.createElement;
           export const jsxs = React.createElement;
-          export const jsxDEV = React.createElement;
+          export const Fragment = React.Fragment;
           
-          // Export ReactDOM APIs
+          export default {
+            jsx,
+            jsxs,
+            Fragment
+          };
+          EOL
+          
+          # Create JSX dev runtime file
+          cat > src/react/jsx-dev-runtime.ts << 'EOL'
+          /**
+           * JSX Dev Runtime shim for React/JSX development runtime resolution
+           */
+          import * as React from 'react';
+          
+          export const jsxDEV = React.createElement;
+          export const jsxs = React.createElement;
+          export const Fragment = React.Fragment;
+          
+          export default {
+            jsxDEV,
+            jsxs,
+            Fragment
+          };
+          EOL
+          
+          # Create React index file
+          cat > src/react/index.ts << 'EOL'
+          /**
+           * React main module shim
+           */
+          import * as React from 'react';
+          export * from 'react';
+          export default React;
+          EOL
+          
+          # Create React DOM fix file
+          cat > src/react-dom-fix.ts << 'EOL'
+          /**
+           * ReactDOM shim for Azure Static Web Apps
+           */
+          import * as ReactDOM from 'react-dom';
+          
+          // Export standard ReactDOM APIs
           export const {
             render, hydrate, unmountComponentAtNode, findDOMNode, createPortal
           } = ReactDOM;
           
-          // Create React 18 compatible APIs
+          // Create React 18 compatible APIs for older React versions
           export const createRoot = (container) => {
             return {
               render(element) {
@@ -85,46 +116,15 @@ jobs:
             };
           };
           
-          // Default exports
-          export default React;
-          export { ReactDOM };
+          // Default export
+          export default ReactDOM;
           EOL
-          
-          # Create JSX runtime shim
-          cat > src/react/jsx-runtime.ts << 'EOL'
-          /**
-           * JSX Runtime shim
-           * This ensures proper import resolution for 'react/jsx-runtime'
-           */
-          import { jsx, jsxs, Fragment } from '../react-runtime-fix';
-          
-          export { jsx, jsxs, Fragment };
-          export default { jsx, jsxs, Fragment };
-          EOL
-          
-          # Create JSX dev runtime shim
-          cat > src/react/jsx-dev-runtime.ts << 'EOL'
-          /**
-           * JSX Dev Runtime shim
-           * This ensures proper import resolution for 'react/jsx-dev-runtime'
-           */
-          import { jsx, jsxs, Fragment } from '../react-runtime-fix';
-          
-          // jsxDEV is just an alias for jsx in production
-          export const jsxDEV = jsx;
-          export { jsxs, Fragment };
-          export default { jsxDEV, jsxs, Fragment };
-          EOL
-          
-          echo "React files prepared successfully!"
       
-      # Run the copy-assets script
       - name: Copy assets
         working-directory: ./frontend
         run: |
           node scripts/copy-assets.js
       
-      # Build the application
       - name: Build Frontend
         working-directory: ./frontend
         run: |
@@ -141,7 +141,6 @@ jobs:
           CI: false
           NODE_ENV: production
       
-      # Copy the static web app config to dist
       - name: Copy SWA config
         working-directory: ./frontend
         run: |

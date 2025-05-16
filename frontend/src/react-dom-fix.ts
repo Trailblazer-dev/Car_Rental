@@ -1,8 +1,15 @@
-// This file ensures proper React DOM resolution in production builds
+/**
+ * ReactDOM shim for Azure Static Web Apps
+ */
 import * as ReactDOM from 'react-dom';
 
-// Create polyfill for React 18 APIs if using older React
-const createRoot = (container: Element | DocumentFragment) => {
+// Export standard ReactDOM APIs
+export const {
+  render, hydrate, unmountComponentAtNode, findDOMNode, createPortal
+} = ReactDOM;
+
+// Create React 18 compatible APIs for older React versions
+export const createRoot = (container: Element | DocumentFragment) => {
   return {
     render(element: React.ReactNode) {
       ReactDOM.render(element, container);
@@ -13,7 +20,7 @@ const createRoot = (container: Element | DocumentFragment) => {
   };
 };
 
-const hydrateRoot = (container: Element | DocumentFragment, element: React.ReactNode) => {
+export const hydrateRoot = (container: Element | DocumentFragment, element: React.ReactNode) => {
   ReactDOM.hydrate(element, container);
   return {
     unmount() {
@@ -22,11 +29,5 @@ const hydrateRoot = (container: Element | DocumentFragment, element: React.React
   };
 };
 
-// Export standard ReactDOM APIs
+// Default export
 export default ReactDOM;
-export const {
-  render, hydrate, findDOMNode, createPortal, unmountComponentAtNode
-} = ReactDOM;
-
-// Export React 18 API polyfills
-export { createRoot, hydrateRoot };
