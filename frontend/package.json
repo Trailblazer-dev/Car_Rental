@@ -5,11 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
+    "prebuild": "node scripts/copy-assets.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "clean": "rm -rf node_modules package-lock.json dist",
-    "postinstall": "npm install react@latest react-dom@latest --legacy-peer-deps"
+    "swa:start": "swa start",
+    "swa:build": "npm run build",
+    "swa:deploy": "swa deploy",
+    "preinstall": "npm install -g @azure/static-web-apps-cli@latest",
+    "copy-assets": "node scripts/copy-assets.js"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^28.0.3",

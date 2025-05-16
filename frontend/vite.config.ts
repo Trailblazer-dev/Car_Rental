@@ -46,11 +46,15 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
           ui: ['lucide-react']
-        }
+        },
+        // Ensure assets get nice URLs
+        assetFileNames: 'assets/[name]-[hash][extname]'
       },
       external: []
     }
   },
+  // This ensures the public directory is properly copied to the build output
+  publicDir: 'public',
   define: {
     'process.env.NODE_ENV': JSON.stringify('production')
   },

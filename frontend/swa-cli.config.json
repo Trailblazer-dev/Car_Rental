@@ -1,12 +1,10 @@
 {
   "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
   "configurations": {
-    "car-rental-frontend": {
+    "car-rental-app": {
       "appLocation": ".",
-      "apiLocation": "",
       "outputLocation": "dist",
       "appBuildCommand": "npm run build",
-      "apiBuildCommand": "",
       "run": "npm run dev",
       "appDevserverUrl": "http://localhost:5173"
     }

@@ -24,10 +24,12 @@ jobs:
         with:
           node-version: 18
       
-      # Install dependencies in the current directory
+      # Install dependencies in the frontend directory
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm install
+        run: |
+          npm install --legacy-peer-deps
+          npm install @rollup/plugin-commonjs @rollup/plugin-node-resolve --legacy-peer-deps
       
       # Build separately
       - name: Build Frontend

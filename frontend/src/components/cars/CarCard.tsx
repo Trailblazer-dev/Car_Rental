@@ -36,7 +36,17 @@ const CarCard = ({
   const handleImageError = () => {
     if (imageError) return;
     setImageError(true);
-    setImageSrc("/src/assets/car-placeholder.jpg");
+    
+    // Try using the image from the public folder
+    const publicFallback = "/images/car-placeholder.jpg";
+    setImageSrc(publicFallback);
+    
+    // If that also fails, use an external placeholder
+    const img = new Image();
+    img.onerror = () => {
+      setImageSrc("https://placehold.co/600x400?text=Car+Image");
+    };
+    img.src = publicFallback;
   };
 
   return (
