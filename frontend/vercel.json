@@ -1,8 +1,8 @@
 {
-  "buildCommand": "npx pnpm install --no-frozen-lockfile && npx pnpm run build",
+  "buildCommand": "npm i -g pnpm && pnpm install && pnpm build",
   "outputDirectory": "dist",
   "devCommand": "pnpm run dev",
-  "installCommand": "npx pnpm install --no-frozen-lockfile",
+  "installCommand": "npm i -g pnpm && pnpm install",
   "framework": "vite",
   "routes": [
     { "handle": "filesystem" },

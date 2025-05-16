@@ -31,14 +31,14 @@
     "globals": "^13.24.0",
     "rollup": "^3.29.4",
     "typescript": "^5.2.2",
-    "vite": "^5.0.10"
+    "vite": "^4.5.2"
   },
   "engines": {
     "node": "16.x || 18.x || 20.x"
   },
   "pnpm": {
     "overrides": {
-      "rollup": "3.29.4"
+      "rollup": "^3.29.4"
     }
   }
 }
