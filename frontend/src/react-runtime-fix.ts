@@ -1,7 +1,6 @@
 /**
  * Unified React runtime fix for Azure Static Web Apps deployment
- * This file handles both React and ReactDOM runtime exports,
- * including JSX runtime
+ * This file handles both React and ReactDOM runtime exports
  */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -14,7 +13,7 @@ export const {
   useLayoutEffect, useImperativeHandle, useDebugValue
 } = React;
 
-// Export React JSX runtime functions explicitly - these are critical
+// Export React JSX runtime functions
 export const jsx = React.createElement;
 export const jsxs = React.createElement;
 export const jsxDEV = React.createElement;

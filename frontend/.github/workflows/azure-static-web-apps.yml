@@ -26,16 +26,20 @@ jobs:
           cache: 'npm'
           cache-dependency-path: './frontend/package-lock.json'
       
-      # Apply React fixes for Azure Static Web Apps
-      - name: Create React Fix Files
+      # Install dependencies
+      - name: Install dependencies
         working-directory: ./frontend
         run: |
-          mkdir -p src
-          node -e "
-          const fs = require('fs');
+          npm ci --legacy-peer-deps --no-audit --no-fund
+      
+      # Prepare React files for Azure
+      - name: Prepare React files for Azure
+        working-directory: ./frontend
+        run: |
+          mkdir -p src/react
           
-          // React Runtime Fix
-          fs.writeFileSync('src/react-runtime-fix.ts', \`
+          # Create React runtime fix
+          cat > src/react-runtime-fix.ts << 'EOL'
           /**
            * Unified React runtime fix for Azure Static Web Apps deployment
            */
@@ -46,15 +50,14 @@ jobs:
           export const {
             useState, useEffect, useContext, useReducer, useCallback, useMemo, useRef,
             createContext, createElement, cloneElement, createRef, Component, PureComponent,
-            Children, isValidElement, forwardRef, memo,
+            Children, Fragment, isValidElement, forwardRef, memo,
             useLayoutEffect, useImperativeHandle, useDebugValue
           } = React;
           
-          // Export React JSX runtime functions explicitly
+          // Export React JSX runtime functions
           export const jsx = React.createElement;
           export const jsxs = React.createElement;
           export const jsxDEV = React.createElement;
-          export const Fragment = React.Fragment;
           
           // Export ReactDOM APIs
           export const {
@@ -85,30 +88,43 @@ jobs:
           // Default exports
           export default React;
           export { ReactDOM };
-          \`);
+          EOL
           
-          // JSX Runtime redirect
-          fs.writeFileSync('src/jsx-runtime.ts', \`
-          // Redirect file for jsx-runtime
-          export * from './react-runtime-fix';
-          \`);
+          # Create JSX runtime shim
+          cat > src/react/jsx-runtime.ts << 'EOL'
+          /**
+           * JSX Runtime shim
+           * This ensures proper import resolution for 'react/jsx-runtime'
+           */
+          import { jsx, jsxs, Fragment } from '../react-runtime-fix';
           
-          console.log('React fix files created successfully');
-          "
+          export { jsx, jsxs, Fragment };
+          export default { jsx, jsxs, Fragment };
+          EOL
+          
+          # Create JSX dev runtime shim
+          cat > src/react/jsx-dev-runtime.ts << 'EOL'
+          /**
+           * JSX Dev Runtime shim
+           * This ensures proper import resolution for 'react/jsx-dev-runtime'
+           */
+          import { jsx, jsxs, Fragment } from '../react-runtime-fix';
+          
+          // jsxDEV is just an alias for jsx in production
+          export const jsxDEV = jsx;
+          export { jsxs, Fragment };
+          export default { jsxDEV, jsxs, Fragment };
+          EOL
+          
+          echo "React files prepared successfully!"
       
-      # Clean install dependencies with specific flags
-      - name: Install dependencies
-        working-directory: ./frontend
-        run: |
-          npm ci --legacy-peer-deps --no-audit --no-fund
-      
-      # Run the copy-assets script separately
+      # Run the copy-assets script
       - name: Copy assets
         working-directory: ./frontend
         run: |
           node scripts/copy-assets.js
       
-      # Build with verbose logging
+      # Build the application
       - name: Build Frontend
         working-directory: ./frontend
         run: |
@@ -124,7 +140,6 @@ jobs:
         env:
           CI: false
           NODE_ENV: production
-          VITE_BUILD_MODE: azure
       
       # Copy the static web app config to dist
       - name: Copy SWA config

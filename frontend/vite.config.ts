@@ -19,12 +19,12 @@ export default defineConfig({
       '@services': resolve(__dirname, './src/services'),
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
-      // Ensure all React imports are consolidated through our runtime fix
+      // React module resolution
       'react': resolve(__dirname, './src/react-runtime-fix.ts'),
       'react-dom': resolve(__dirname, './src/react-runtime-fix.ts'),
       'react-dom/client': resolve(__dirname, './src/react-runtime-fix.ts'),
-      'react/jsx-runtime': resolve(__dirname, './src/react-runtime-fix.ts'),
-      'react/jsx-dev-runtime': resolve(__dirname, './src/react-runtime-fix.ts')
+      'react/jsx-runtime': resolve(__dirname, './src/react/jsx-runtime.ts'),
+      'react/jsx-dev-runtime': resolve(__dirname, './src/react/jsx-dev-runtime.ts')
     },
     dedupe: ['react', 'react-dom'],
     mainFields: ['browser', 'module', 'main'],
