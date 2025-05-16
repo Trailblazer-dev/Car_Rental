@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      // Use our shim files instead of direct React imports
       'react': resolve(__dirname, './src/react-shim.js'),
       'react-dom': resolve(__dirname, './src/react-dom-shim.js'),
       'react/jsx-runtime': resolve(__dirname, './src/jsx-runtime-shim.js'),
@@ -18,6 +19,7 @@ export default defineConfig({
     assetsDir: 'assets',
     rollupOptions: {
       output: {
+        // Disable code splitting for better compatibility
         manualChunks: undefined,
         inlineDynamicImports: true
       }

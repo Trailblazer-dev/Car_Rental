@@ -32,25 +32,24 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
       
-      # Create React shim files to fix module resolution
+      # Create React shim files
       - name: Create React shim files
         working-directory: ./frontend
         run: |
-          # Create src directory if it doesn't exist
           mkdir -p src
           
           # Create React shim
           cat > src/react-shim.js << 'EOL'
-          // React shim to fix module resolution in production builds
-          import * as React from 'react';
+          // React shim for proper module resolution in production builds
+          import React from 'react';
           export * from 'react';
           export default React;
           EOL
           
           # Create ReactDOM shim
           cat > src/react-dom-shim.js << 'EOL'
-          // ReactDOM shim to fix module resolution in production builds
-          import * as ReactDOM from 'react-dom';
+          // ReactDOM shim for proper module resolution in production builds
+          import ReactDOM from 'react-dom';
           export * from 'react-dom';
           
           // Polyfill for React 18 APIs
@@ -70,9 +69,9 @@ jobs:
           # Create JSX Runtime shim
           cat > src/jsx-runtime-shim.js << 'EOL'
           // JSX Runtime shim for production builds
-          import * as React from 'react';
+          import React from 'react';
           export const jsx = React.createElement;
-          export const jsxs = React.createElement;
+          export const jsxs = React.createElement; 
           export const Fragment = React.Fragment;
           export default { jsx, jsxs, Fragment };
           EOL
@@ -80,7 +79,7 @@ jobs:
           # Create JSX Dev Runtime shim
           cat > src/jsx-dev-runtime-shim.js << 'EOL'
           // JSX Dev Runtime shim for production builds
-          import * as React from 'react';
+          import React from 'react';
           export const jsxDEV = React.createElement;
           export const jsxs = React.createElement;
           export const Fragment = React.Fragment;
@@ -90,7 +89,7 @@ jobs:
           echo "React shim files created successfully!"
       
       # Create temporary Vite config for Azure build
-      - name: Create optimized build config
+      - name: Create Azure Vite config
         working-directory: ./frontend
         run: |
           cat > vite.azure.config.js << 'EOL'
@@ -129,7 +128,7 @@ jobs:
           });
           EOL
           
-          echo "Azure-optimized Vite config created successfully!"
+          echo "Azure Vite config created successfully!"
       
       # Build with the Azure-optimized config
       - name: Build Frontend

@@ -1,8 +1,8 @@
-// ReactDOM shim to fix module resolution in production builds
-import * as ReactDOM from 'react-dom';
+// ReactDOM shim for proper module resolution in production builds
+import ReactDOM from 'react-dom';
 export * from 'react-dom';
 
-// Polyfill for React 18 APIs
+// Polyfill for React 18 APIs in case they're needed
 export const createRoot = (container) => ({
   render(element) { ReactDOM.render(element, container); },
   unmount() { ReactDOM.unmountComponentAtNode(container); }

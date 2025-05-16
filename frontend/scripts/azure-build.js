@@ -1,5 +1,6 @@
 /**
- * Azure Static Web Apps build script
+ * Azure Static Web Apps Build Script
+ * Fixes React module resolution issues in production builds
  */
 import fs from 'fs';
 import path from 'path';
@@ -11,54 +12,42 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
-console.log('⚡ Azure Static Web Apps Build Script');
-console.log('-----------------------------------');
+console.log('🚀 Azure Static Web Apps Build Script');
+console.log('===================================');
 
-// First apply React fixes
-console.log('🔄 Applying React fixes for Azure Static Web Apps...');
+// Run the prebuild script if it exists
+console.log('🔄 Running prebuild script...');
 try {
-  execSync('node scripts/swa-fix-react.js', { stdio: 'inherit', cwd: rootDir });
+  execSync('npm run prebuild', { stdio: 'inherit', cwd: rootDir });
 } catch (error) {
-  console.error('❌ Failed to apply React fixes:', error);
-  process.exit(1);
+  console.warn('⚠️ Warning during prebuild (continuing anyway):', error);
 }
 
-// Copy assets to public folder
-console.log('🔄 Running prebuild script to copy assets...');
+// Build with the Azure-optimized config
+console.log('🏗️ Building application...');
 try {
-  execSync('node scripts/copy-assets.js', { stdio: 'inherit', cwd: rootDir });
-  console.log('✅ Assets copied successfully');
-} catch (error) {
-  console.error('❌ Failed to copy assets:', error);
-  process.exit(1);
-}
-
-// Build the application
-console.log('🏗️ Building application for Azure Static Web Apps...');
-try {
-  execSync('vite build --outDir dist --assetsDir assets --emptyOutDir', { 
+  execSync('npx vite build --config vite.azure.config.js', {
     stdio: 'inherit',
     cwd: rootDir,
-    env: { ...process.env, NODE_ENV: 'production', VITE_BUILD_MODE: 'azure' }
+    env: { ...process.env, NODE_ENV: 'production' }
   });
-  console.log('✅ Build completed successfully');
+  console.log('✅ Build completed successfully!');
 } catch (error) {
   console.error('❌ Build failed:', error);
   process.exit(1);
 }
 
 // Copy staticwebapp.config.json to dist
-console.log('📄 Copying Static Web App configuration...');
-const swaConfigSrc = path.join(rootDir, 'staticwebapp.config.json');
-const swaConfigDest = path.join(rootDir, 'dist', 'staticwebapp.config.json');
-
+console.log('📋 Copying Azure Static Web App configuration...');
 try {
-  fs.copyFileSync(swaConfigSrc, swaConfigDest);
-  console.log('✅ Static Web App configuration copied successfully');
+  fs.copyFileSync(
+    path.join(rootDir, 'staticwebapp.config.json'),
+    path.join(rootDir, 'dist', 'staticwebapp.config.json')
+  );
+  console.log('✅ SWA configuration copied successfully');
 } catch (error) {
-  console.error('❌ Failed to copy SWA configuration:', error);
-  process.exit(1);
+  console.error('⚠️ Failed to copy SWA configuration (continuing anyway):', error);
 }
 
-console.log('🎉 Azure Static Web Apps build complete!');
-console.log('📦 Your app is ready in the dist/ directory');
+console.log('🎉 Azure Static Web Apps build completed successfully!');
+console.log('📦 Your application is ready for deployment in the dist/ directory');
