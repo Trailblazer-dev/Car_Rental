@@ -29,12 +29,8 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     cssCodeSplit: true,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-      },
-    },
+    // Change from 'terser' to 'esbuild' which is built-in
+    minify: 'esbuild',
     rollupOptions: {
       plugins: [
         nodeResolve({
