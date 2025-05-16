@@ -1,12 +1,37 @@
 // This file ensures proper React DOM resolution
 // It's a workaround for "Could not resolve ./cjs/react-dom.production.min.js" error
 
+// Import ReactDOM directly rather than its subpaths
 import * as ReactDOM from 'react-dom';
-import * as ReactDOMClient from 'react-dom/client';
+
+// Define client APIs manually
+const createRoot = (container: Element | DocumentFragment) => {
+  return {
+    render(element: React.ReactNode) {
+      ReactDOM.render(element, container);
+    },
+    unmount() {
+      ReactDOM.unmountComponentAtNode(container);
+    }
+  };
+};
+
+const hydrateRoot = (container: Element | DocumentFragment, element: React.ReactNode) => {
+  ReactDOM.hydrate(element, container);
+  return {
+    unmount() {
+      ReactDOM.unmountComponentAtNode(container);
+    }
+  };
+};
 
 // Re-export all React DOM APIs
-export const createRoot = ReactDOMClient.createRoot;
-export const hydrateRoot = ReactDOMClient.hydrateRoot;
+export {
+  createRoot, 
+  hydrateRoot
+};
+
+// Re-export legacy APIs
 export const render = ReactDOM.render;
 export const hydrate = ReactDOM.hydrate;
 export const findDOMNode = ReactDOM.findDOMNode;
@@ -14,8 +39,5 @@ export const createPortal = ReactDOM.createPortal;
 export const unmountComponentAtNode = ReactDOM.unmountComponentAtNode;
 export const flushSync = ReactDOM.flushSync;
 
-// Re-export all of ReactDOM to ensure compatibility
-const ReactDOMShim = { ...ReactDOM, ...ReactDOMClient };
-
 // Export default ReactDOM for components that need it
-export default ReactDOMShim;
+export default ReactDOM;
