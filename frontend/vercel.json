@@ -1,8 +1,8 @@
 {
-  "buildCommand": "npm i -g pnpm && pnpm install && pnpm build",
+  "buildCommand": "npm ci && npm run build",
   "outputDirectory": "dist",
-  "devCommand": "pnpm run dev",
-  "installCommand": "npm i -g pnpm && pnpm install",
+  "devCommand": "npm run dev",
+  "installCommand": "npm ci",
   "framework": "vite",
   "routes": [
     { "handle": "filesystem" },

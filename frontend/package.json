@@ -34,11 +34,9 @@
     "vite": "^4.5.2"
   },
   "engines": {
-    "node": "16.x || 18.x || 20.x"
+    "node": "16.x || 18.x"
   },
-  "pnpm": {
-    "overrides": {
-      "rollup": "^3.29.4"
-    }
+  "resolutions": {
+    "rollup": "3.29.4"
   }
 }
