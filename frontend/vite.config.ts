@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { fileURLToPath } from "url";
-import {dirname, resolve } from 'path'
+import { dirname, resolve } from 'path'
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,4 +19,14 @@ export default defineConfig({
       '@assets': resolve(__dirname, './src/assets'),
     },
   },
+  build: {
+    // Support for older browsers if needed
+    target: 'es2015',
+    // Output configuration
+    outDir: 'dist',
+    // Enable minification
+    minify: 'terser',
+    // CSS configuration
+    cssCodeSplit: true,
+  }
 });
