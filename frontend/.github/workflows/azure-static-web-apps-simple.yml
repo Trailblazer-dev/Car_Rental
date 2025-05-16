@@ -32,11 +32,110 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
       
-      # Simple production build
+      # Create React shim files to fix module resolution
+      - name: Create React shim files
+        working-directory: ./frontend
+        run: |
+          # Create src directory if it doesn't exist
+          mkdir -p src
+          
+          # Create React shim
+          cat > src/react-shim.js << 'EOL'
+          // React shim to fix module resolution in production builds
+          import * as React from 'react';
+          export * from 'react';
+          export default React;
+          EOL
+          
+          # Create ReactDOM shim
+          cat > src/react-dom-shim.js << 'EOL'
+          // ReactDOM shim to fix module resolution in production builds
+          import * as ReactDOM from 'react-dom';
+          export * from 'react-dom';
+          
+          // Polyfill for React 18 APIs
+          export const createRoot = (container) => ({
+            render(element) { ReactDOM.render(element, container); },
+            unmount() { ReactDOM.unmountComponentAtNode(container); }
+          });
+          
+          export const hydrateRoot = (container, element) => {
+            ReactDOM.hydrate(element, container);
+            return { unmount() { ReactDOM.unmountComponentAtNode(container); } };
+          };
+          
+          export default ReactDOM;
+          EOL
+          
+          # Create JSX Runtime shim
+          cat > src/jsx-runtime-shim.js << 'EOL'
+          // JSX Runtime shim for production builds
+          import * as React from 'react';
+          export const jsx = React.createElement;
+          export const jsxs = React.createElement;
+          export const Fragment = React.Fragment;
+          export default { jsx, jsxs, Fragment };
+          EOL
+          
+          # Create JSX Dev Runtime shim
+          cat > src/jsx-dev-runtime-shim.js << 'EOL'
+          // JSX Dev Runtime shim for production builds
+          import * as React from 'react';
+          export const jsxDEV = React.createElement;
+          export const jsxs = React.createElement;
+          export const Fragment = React.Fragment;
+          export default { jsxDEV, jsxs, Fragment };
+          EOL
+          
+          echo "React shim files created successfully!"
+      
+      # Create temporary Vite config for Azure build
+      - name: Create optimized build config
+        working-directory: ./frontend
+        run: |
+          cat > vite.azure.config.js << 'EOL'
+          import { defineConfig } from 'vite';
+          import react from '@vitejs/plugin-react-swc';
+          import { resolve } from 'path';
+          
+          // Special production configuration for Azure Static Web Apps
+          export default defineConfig({
+            plugins: [react()],
+            resolve: {
+              alias: {
+                'react': resolve(__dirname, './src/react-shim.js'),
+                'react-dom': resolve(__dirname, './src/react-dom-shim.js'),
+                'react/jsx-runtime': resolve(__dirname, './src/jsx-runtime-shim.js'),
+                'react/jsx-dev-runtime': resolve(__dirname, './src/jsx-dev-runtime-shim.js'),
+              }
+            },
+            build: {
+              outDir: 'dist',
+              assetsDir: 'assets',
+              rollupOptions: {
+                output: {
+                  manualChunks: undefined,
+                  inlineDynamicImports: true
+                }
+              },
+              commonjsOptions: {
+                include: [/node_modules/],
+                transformMixedEsModules: true
+              },
+            },
+            optimizeDeps: {
+              include: ['react', 'react-dom', 'react-router-dom']
+            }
+          });
+          EOL
+          
+          echo "Azure-optimized Vite config created successfully!"
+      
+      # Build with the Azure-optimized config
       - name: Build Frontend
         working-directory: ./frontend
         run: |
-          npx vite build --outDir dist
+          npx vite build --config vite.azure.config.js
         env:
           NODE_ENV: production
       

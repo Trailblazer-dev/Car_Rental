@@ -12,14 +12,12 @@
     "preview": "vite preview",
     "clean": "rm -rf node_modules package-lock.json dist",
     "swa:start": "npx swa start",
-    "swa:build": "node scripts/build-for-swa.js",
+    "swa:build": "node scripts/swa-build-fix.js",
+    "build:azure": "node scripts/swa-build-fix.js",
     "swa:deploy": "npx swa deploy --env production",
     "swa:build:clean": "npm run clean && npm install --no-audit --no-fund && npm run swa:build",
     "swa:config": "npx swa init --yes",
-    "fix:react": "node scripts/fix-react-for-azure.js",
-    "prepare:azure": "node scripts/azure-deploy-fix.js",
-    "build:azure": "node scripts/azure-build-fix.js",
-    "prepare:swa": "node scripts/prepare-for-swa.js"
+    "fix:react": "node scripts/fix-react-for-azure.js"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^24.1.0",
