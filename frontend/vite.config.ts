@@ -19,10 +19,9 @@ export default defineConfig({
       '@services': resolve(__dirname, './src/services'),
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
-      // Simplify React module resolution
-      'react': resolve(__dirname, './src/react/index.ts'),
-      'react/jsx-runtime': resolve(__dirname, './src/react/jsx-runtime.ts'),
-      'react/jsx-dev-runtime': resolve(__dirname, './src/react/jsx-dev-runtime.ts')
+      // React module resolution fixes for Azure SWA
+      'react': resolve(__dirname, './src/react'),
+      'react/jsx-runtime': resolve(__dirname, './src/react/jsx-runtime.ts')
     },
     dedupe: ['react', 'react-dom'],
     mainFields: ['browser', 'module', 'main'],

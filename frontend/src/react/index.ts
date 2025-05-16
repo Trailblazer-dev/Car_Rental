@@ -17,5 +17,12 @@ export const jsx = React.createElement;
 export const jsxs = React.createElement;
 export const jsxDEV = React.createElement;
 
+// Create explicit exports for jsx-runtime
+export const JsxRuntime = {
+  jsx: React.createElement,
+  jsxs: React.createElement,
+  Fragment: React.Fragment
+};
+
 // Default export
 export default React;

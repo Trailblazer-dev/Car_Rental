@@ -17,7 +17,8 @@
     "swa:build:clean": "npm run clean && npm install --no-audit --no-fund && npm run swa:build",
     "swa:config": "npx swa init --yes",
     "fix:react": "node scripts/fix-react-for-azure.js",
-    "build:azure": "node scripts/fix-react-for-azure.js && npm run prebuild && vite build",
+    "prepare:azure": "node scripts/azure-deploy-fix.js",
+    "build:azure": "npm run prepare:azure && npm run prebuild && vite build --outDir dist --assetsDir assets",
     "prepare:swa": "node scripts/prepare-swa-build.js"
   },
   "dependencies": {
