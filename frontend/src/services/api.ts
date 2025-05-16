@@ -1,6 +1,17 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000';
+// Determine the appropriate API base URL based on environment
+const getBaseUrl = () => {
+  // When deployed to Azure Static Web Apps
+  if (import.meta.env.PROD) {
+    // For production - replace with your actual Azure backend URL
+    return import.meta.env.VITE_API_BASE_URL || 'https://your-backend-api.azurewebsites.net';
+  }
+  // For local development
+  return 'http://localhost:8000';
+};
+
+const API_BASE_URL = getBaseUrl();
 
 const api = axios.create({
   baseURL: API_BASE_URL,
