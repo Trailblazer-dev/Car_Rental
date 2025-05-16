@@ -7,7 +7,7 @@ import {
 import './index.css'
 import App from './App'
 
-// Option 1: Using BrowserRouter with future flags
+// Define the router with future flags
 const router = createBrowserRouter(
   [{ path: "*", element: <App /> }],
   {
@@ -17,7 +17,16 @@ const router = createBrowserRouter(
   }
 );
 
-createRoot(document.getElementById('root')!).render(
+// Get the root element where the app will be mounted
+const rootElement = document.getElementById('root');
+
+// Ensure the element exists
+if (!rootElement) {
+  throw new Error("Root element not found. Make sure there is an element with id 'root'");
+}
+
+// Create a root and render the app
+createRoot(rootElement).render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>,
