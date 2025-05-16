@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import react from '@vitejs/plugin-react'
 import { fileURLToPath } from "url";
 import { dirname, resolve } from 'path'
 
@@ -20,10 +20,8 @@ export default defineConfig({
     },
   },
   build: {
-    target: 'es2018',
     outDir: 'dist',
-    assetsDir: 'assets',
-    cssCodeSplit: true,
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {

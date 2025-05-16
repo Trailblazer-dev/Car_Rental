@@ -23,19 +23,22 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
       
-      # Force clean install
-      - name: Clean Install
+      # Install dependencies
+      - name: Install dependencies
         run: |
           cd frontend
-          rm -rf node_modules package-lock.json
-          npm install
+          npm ci
       
-      # Build separately with verbose output
+      # Build separately with clear output
       - name: Build Frontend
         run: |
           cd frontend
           npm run build
+        env:
+          CI: false
       
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
