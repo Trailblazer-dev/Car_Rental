@@ -26,35 +26,39 @@ jobs:
           cache: 'npm'
           cache-dependency-path: './frontend/package-lock.json'
       
-      # Generate React fix files
-      - name: Generate React fix files
+      # Create the react-runtime-fix.ts file
+      - name: Create React runtime fix file
         working-directory: ./frontend
         run: |
           mkdir -p src
-          # Create React fix file
-          cat > src/react-fix.ts << 'EOL'
-          // This file ensures proper React resolution in production builds
+          cat > src/react-runtime-fix.ts << 'EOL'
+          /**
+           * Unified React runtime fix for Azure Static Web Apps deployment
+           * This file handles both React and ReactDOM runtime exports
+           */
           import * as React from 'react';
-
-          // Re-export all React APIs
-          export default React;
+          import * as ReactDOM from 'react-dom';
+          
+          // Export all React APIs
           export const {
-            // Core React APIs
             useState, useEffect, useContext, useReducer, useCallback, useMemo, useRef,
-            createContext, createElement, Fragment, memo, forwardRef, createRef,
-            Children, cloneElement, isValidElement, Component, PureComponent,
-            // Other commonly used APIs
+            createContext, createElement, cloneElement, createRef, Component, PureComponent,
+            Children, Fragment, isValidElement, forwardRef, memo,
             useLayoutEffect, useImperativeHandle, useDebugValue
           } = React;
-          EOL
-
-          # Create React DOM fix file
-          cat > src/react-dom-fix.ts << 'EOL'
-          // This file ensures proper React DOM resolution in production builds
-          import * as ReactDOM from 'react-dom';
-
-          // Create polyfill for React 18 APIs if using older React
-          const createRoot = (container: Element | DocumentFragment) => {
+          
+          // Export React JSX runtime functions
+          export const jsx = React.createElement;
+          export const jsxs = React.createElement;
+          export const jsxDEV = React.createElement;
+          
+          // Export ReactDOM APIs
+          export const {
+            render, hydrate, unmountComponentAtNode, findDOMNode, createPortal
+          } = ReactDOM;
+          
+          // Create React 18 compatible APIs
+          export const createRoot = (container: Element | DocumentFragment) => {
             return {
               render(element: React.ReactNode) {
                 ReactDOM.render(element, container);
@@ -64,8 +68,8 @@ jobs:
               }
             };
           };
-
-          const hydrateRoot = (container: Element | DocumentFragment, element: React.ReactNode) => {
+          
+          export const hydrateRoot = (container: Element | DocumentFragment, element: React.ReactNode) => {
             ReactDOM.hydrate(element, container);
             return {
               unmount() {
@@ -73,24 +77,19 @@ jobs:
               }
             };
           };
-
-          // Export standard ReactDOM APIs
-          export default ReactDOM;
-          export const {
-            render, hydrate, findDOMNode, createPortal, unmountComponentAtNode
-          } = ReactDOM;
-
-          // Export React 18 API polyfills
-          export { createRoot, hydrateRoot };
+          
+          // Default exports
+          export default React;
+          export const ReactDOMDefault = ReactDOM;
           EOL
       
-      # Clean install dependencies
+      # Clean install dependencies with specific flags
       - name: Install dependencies
         working-directory: ./frontend
         run: |
           npm ci --legacy-peer-deps --no-audit --no-fund
       
-      # Run pre-build asset copying
+      # Run the copy-assets script separately
       - name: Copy assets
         working-directory: ./frontend
         run: |
@@ -101,7 +100,7 @@ jobs:
         working-directory: ./frontend
         run: |
           echo "Starting build process..."
-          NODE_ENV=production VITE_BUILD_MODE=azure npm run build
+          npx vite build --outDir dist --assetsDir assets --emptyOutDir
           if [ -d "dist" ]; then
             echo "Build succeeded, contents of dist:"
             ls -la dist
@@ -111,15 +110,13 @@ jobs:
           fi
         env:
           CI: false
+          NODE_ENV: production
       
-      # Ensure SWA config is in dist
-      - name: Ensure SWA Config
+      # Copy the static web app config to dist
+      - name: Copy SWA config
         working-directory: ./frontend
         run: |
-          if [ ! -f "dist/staticwebapp.config.json" ]; then
-            echo "Copying Static Web App config to dist folder"
-            cp staticwebapp.config.json dist/
-          fi
+          cp staticwebapp.config.json dist/
       
       - name: Deploy to Azure Static Web Apps
         id: builddeploy

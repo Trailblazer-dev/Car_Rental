@@ -19,10 +19,12 @@ export default defineConfig({
       '@services': resolve(__dirname, './src/services'),
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
-      // Provide explicit module aliases to fix production build issues
-      'react': resolve(__dirname, './src/react-fix.ts'),
-      'react-dom': resolve(__dirname, './src/react-dom-fix.ts'),
-      'react-dom/client': resolve(__dirname, './src/react-dom-fix.ts')
+      // Use a single runtime fix file for all React-related modules
+      'react': resolve(__dirname, './src/react-runtime-fix.ts'),
+      'react-dom': resolve(__dirname, './src/react-runtime-fix.ts'),
+      'react-dom/client': resolve(__dirname, './src/react-runtime-fix.ts'),
+      'react/jsx-runtime': resolve(__dirname, './src/react-runtime-fix.ts'),
+      'react/jsx-dev-runtime': resolve(__dirname, './src/react-runtime-fix.ts')
     },
     dedupe: ['react', 'react-dom'],
     mainFields: ['browser', 'module', 'main'],
@@ -35,26 +37,9 @@ export default defineConfig({
     minify: 'esbuild',
     commonjsOptions: {
       transformMixedEsModules: true,
-      include: [/node_modules/],
-      // Add explicit handling for React
-      namedExports: {
-        'react': [
-          'Children', 'Component', 'Fragment', 'Profiler', 'PureComponent', 
-          'StrictMode', 'Suspense', 'createElement', 'cloneElement', 
-          'createContext', 'createRef', 'forwardRef', 'isValidElement', 
-          'lazy', 'memo', 'useCallback', 'useContext', 'useDebugValue', 
-          'useEffect', 'useImperativeHandle', 'useLayoutEffect', 'useMemo', 
-          'useReducer', 'useRef', 'useState'
-        ],
-        'react-dom': [
-          'render', 'hydrate', 'unmountComponentAtNode', 'createPortal', 
-          'findDOMNode', 'flushSync'
-        ]
-      }
+      include: [/node_modules/]
     },
     rollupOptions: {
-      // External packages that should not be bundled
-      external: [],
       plugins: [
         nodeResolve({
           extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
@@ -83,10 +68,9 @@ export default defineConfig({
           }
         },
         // Ensure consistent output format
-        format: 'es',
-        // Add proper asset paths for Azure Static Web Apps
-        assetFileNames: 'assets/[name].[hash].[ext]'
-      }
+        format: 'es'
+      },
+      external: []
     }
   },
   // This ensures the public directory is properly copied to the build output
