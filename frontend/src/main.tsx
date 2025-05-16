@@ -5,14 +5,18 @@ import {
   RouterProvider
 } from 'react-router-dom'
 import './index.css'
-import App from './App.tsx'
+import App from './App'
 
 // Create router
 const router = createBrowserRouter(
   [{ path: "*", element: <App /> }]
 );
 
-createRoot(document.getElementById('root')!).render(
+// Get root element and ensure it exists
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Root element not found');
+
+createRoot(rootElement).render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>,
