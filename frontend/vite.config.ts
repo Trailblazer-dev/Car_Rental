@@ -17,6 +17,8 @@ export default defineConfig({
       '@services': resolve(__dirname, './src/services'),
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
+      'react/jsx-runtime': resolve(__dirname, './src/jsx-runtime-fix.ts'),
+      'react/jsx-dev-runtime': resolve(__dirname, './src/jsx-runtime-fix.ts')
     },
   },
   build: {
