@@ -15,16 +15,4 @@ export default defineConfig({
       '@assets': '/src/assets',
     },
   },
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-    // Handling TypeScript files during build
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-        },
-      },
-    },
-  },
 });
