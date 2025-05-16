@@ -20,13 +20,20 @@ export default defineConfig({
     },
   },
   build: {
-    // Support for older browsers if needed
-    target: 'es2015',
-    // Output configuration
+    target: 'es2018',
     outDir: 'dist',
-    // Enable minification
-    minify: 'terser',
-    // CSS configuration
+    assetsDir: 'assets',
     cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['lucide-react']
+        }
+      }
+    }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'lucide-react']
   }
 });
