@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "prebuild": "node scripts/copy-assets.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -13,8 +12,7 @@
     "swa:start": "swa start",
     "swa:build": "npm run build",
     "swa:deploy": "swa deploy",
-    "preinstall": "npm install -g @azure/static-web-apps-cli@latest",
-    "copy-assets": "node scripts/copy-assets.js"
+    "swa:build:clean": "npm run clean && npm install --no-audit --no-fund && npm run build"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^28.0.3",

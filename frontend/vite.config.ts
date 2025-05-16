@@ -19,11 +19,14 @@ export default defineConfig({
       '@services': resolve(__dirname, './src/services'),
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
-      // Explicit JSX runtime replacements
+      // Explicit module replacements to fix production build issues
       'react/jsx-runtime': resolve(__dirname, './src/jsx-runtime-fix.ts'),
-      'react/jsx-dev-runtime': resolve(__dirname, './src/jsx-runtime-fix.ts')
+      'react/jsx-dev-runtime': resolve(__dirname, './src/jsx-runtime-fix.ts'),
+      'react-dom': resolve(__dirname, './src/react-dom-fix.ts'),
+      'react-dom/client': resolve(__dirname, './src/react-dom-fix.ts')
     },
     dedupe: ['react', 'react-dom'],
+    mainFields: ['browser', 'module', 'main'],
   },
   build: {
     outDir: 'dist',
@@ -31,11 +34,16 @@ export default defineConfig({
     cssCodeSplit: true,
     // Change from 'terser' to 'esbuild' which is built-in
     minify: 'esbuild',
+    commonjsOptions: {
+      transformMixedEsModules: true,
+      include: [/node_modules/]
+    },
     rollupOptions: {
       plugins: [
         nodeResolve({
           extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
-          browser: true
+          browser: true,
+          preferBuiltins: false
         }),
         commonjs({
           include: /node_modules/,
@@ -43,22 +51,34 @@ export default defineConfig({
         })
       ],
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['lucide-react']
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('scheduler') || id.includes('object-assign')) {
+              return 'vendor-react';
+            }
+            if (id.includes('lucide')) {
+              return 'vendor-ui';
+            }
+            if (id.includes('react-router') || id.includes('react-dom')) {
+              return 'vendor-router';
+            }
+            return 'vendor'; // all other packages
+          }
         },
-        // Ensure assets get nice URLs
-        assetFileNames: 'assets/[name]-[hash][extname]'
+        format: 'es'
       },
       external: []
     }
   },
   // This ensures the public directory is properly copied to the build output
   publicDir: 'public',
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'lucide-react', 'react-dom/client']
+  },
+  esbuild: {
+    jsxInject: `import React from 'react'`
+  },
   define: {
     'process.env.NODE_ENV': JSON.stringify('production')
-  },
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'lucide-react']
   }
 });
