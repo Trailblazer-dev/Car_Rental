@@ -2,12 +2,25 @@
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": [
-      "/images/*.{png,jpg,gif}",
+      "/images/*.{png,jpg,gif,svg,webp}",
       "/css/*",
-      "/assets/*"
+      "/assets/*",
+      "/*.{js,css,map,json,webmanifest}"
     ]
   },
   "routes": [
+    {
+      "route": "/assets/*",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "route": "/*.{js,css,map,png,jpg,gif,svg,webp,woff,woff2,ttf,eot}",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      }
+    },
     {
       "route": "/*",
       "serve": "/index.html",
@@ -21,6 +34,19 @@
     }
   },
   "globalHeaders": {
+    "content-security-policy": "default-src 'self' data: https: 'unsafe-eval' 'unsafe-inline'; connect-src 'self' https://*.azurewebsites.net https://*.azure-api.net",
     "cache-control": "must-revalidate, max-age=3600"
+  },
+  "mimeTypes": {
+    ".json": "application/json",
+    ".js": "text/javascript",
+    ".css": "text/css",
+    ".html": "text/html",
+    ".ico": "image/x-icon",
+    ".svg": "image/svg+xml",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
+    ".ttf": "font/ttf",
+    ".eot": "font/eot"
   }
 }
