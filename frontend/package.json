@@ -17,7 +17,9 @@
     "swa:build:clean": "npm run clean && npm install --no-audit --no-fund && npm run swa:build",
     "swa:init": "npx swa init --yes",
     "build:azure": "node scripts/azure-build.js",
-    "swa:local": "npx swa start http://localhost:5173 --run 'npm run dev'"
+    "swa:local": "npx swa start http://localhost:5173 --run 'npm run dev'",
+    "build:azure:simple": "node scripts/azure-simple-build.js",
+    "swa:build:simple": "node scripts/azure-simple-build.js"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^24.1.0",

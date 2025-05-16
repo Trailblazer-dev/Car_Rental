@@ -18,7 +18,6 @@ export const {
 export const jsx = React.createElement;
 export const jsxs = React.createElement;
 export const jsxDEV = React.createElement;
-export const Fragment = React.Fragment;
 
 // Export ReactDOM APIs
 export const {
