@@ -1,7 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { 
-  BrowserRouter as Router,
+import {
   createBrowserRouter,
   RouterProvider
 } from 'react-router-dom'
@@ -13,7 +12,6 @@ const router = createBrowserRouter(
   [{ path: "*", element: <App /> }],
   {
     future: {
-      v7_startTransition: true,
       v7_relativeSplatPath: true
     }
   }
