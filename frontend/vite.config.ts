@@ -19,9 +19,8 @@ export default defineConfig({
       '@services': resolve(__dirname, './src/services'),
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
-      // Explicit module replacements to fix production build issues
-      'react/jsx-runtime': resolve(__dirname, './src/jsx-runtime-fix.ts'),
-      'react/jsx-dev-runtime': resolve(__dirname, './src/jsx-runtime-fix.ts'),
+      // Provide explicit module aliases to fix production build issues
+      'react': resolve(__dirname, './src/react-fix.ts'),
       'react-dom': resolve(__dirname, './src/react-dom-fix.ts'),
       'react-dom/client': resolve(__dirname, './src/react-dom-fix.ts')
     },
@@ -36,9 +35,26 @@ export default defineConfig({
     minify: 'esbuild',
     commonjsOptions: {
       transformMixedEsModules: true,
-      include: [/node_modules/]
+      include: [/node_modules/],
+      // Add explicit handling for React
+      namedExports: {
+        'react': [
+          'Children', 'Component', 'Fragment', 'Profiler', 'PureComponent', 
+          'StrictMode', 'Suspense', 'createElement', 'cloneElement', 
+          'createContext', 'createRef', 'forwardRef', 'isValidElement', 
+          'lazy', 'memo', 'useCallback', 'useContext', 'useDebugValue', 
+          'useEffect', 'useImperativeHandle', 'useLayoutEffect', 'useMemo', 
+          'useReducer', 'useRef', 'useState'
+        ],
+        'react-dom': [
+          'render', 'hydrate', 'unmountComponentAtNode', 'createPortal', 
+          'findDOMNode', 'flushSync'
+        ]
+      }
     },
     rollupOptions: {
+      // External packages that should not be bundled
+      external: [],
       plugins: [
         nodeResolve({
           extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
@@ -51,6 +67,7 @@ export default defineConfig({
         })
       ],
       output: {
+        // Create separate chunks for better caching
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('scheduler') || id.includes('object-assign')) {
@@ -65,9 +82,11 @@ export default defineConfig({
             return 'vendor'; // all other packages
           }
         },
-        format: 'es'
-      },
-      external: []
+        // Ensure consistent output format
+        format: 'es',
+        // Add proper asset paths for Azure Static Web Apps
+        assetFileNames: 'assets/[name].[hash].[ext]'
+      }
     }
   },
   // This ensures the public directory is properly copied to the build output
@@ -76,7 +95,9 @@ export default defineConfig({
     include: ['react', 'react-dom', 'react-router-dom', 'lucide-react']
   },
   esbuild: {
-    jsxInject: `import React from 'react'`
+    jsxInject: `import React from 'react'`,
+    // Ensure JSX is correctly transformed
+    jsx: 'automatic'
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify('production')

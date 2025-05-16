@@ -26,27 +26,82 @@ jobs:
           cache: 'npm'
           cache-dependency-path: './frontend/package-lock.json'
       
-      # Clean install dependencies with specific flags
+      # Generate React fix files
+      - name: Generate React fix files
+        working-directory: ./frontend
+        run: |
+          mkdir -p src
+          # Create React fix file
+          cat > src/react-fix.ts << 'EOL'
+          // This file ensures proper React resolution in production builds
+          import * as React from 'react';
+
+          // Re-export all React APIs
+          export default React;
+          export const {
+            // Core React APIs
+            useState, useEffect, useContext, useReducer, useCallback, useMemo, useRef,
+            createContext, createElement, Fragment, memo, forwardRef, createRef,
+            Children, cloneElement, isValidElement, Component, PureComponent,
+            // Other commonly used APIs
+            useLayoutEffect, useImperativeHandle, useDebugValue
+          } = React;
+          EOL
+
+          # Create React DOM fix file
+          cat > src/react-dom-fix.ts << 'EOL'
+          // This file ensures proper React DOM resolution in production builds
+          import * as ReactDOM from 'react-dom';
+
+          // Create polyfill for React 18 APIs if using older React
+          const createRoot = (container: Element | DocumentFragment) => {
+            return {
+              render(element: React.ReactNode) {
+                ReactDOM.render(element, container);
+              },
+              unmount() {
+                ReactDOM.unmountComponentAtNode(container);
+              }
+            };
+          };
+
+          const hydrateRoot = (container: Element | DocumentFragment, element: React.ReactNode) => {
+            ReactDOM.hydrate(element, container);
+            return {
+              unmount() {
+                ReactDOM.unmountComponentAtNode(container);
+              }
+            };
+          };
+
+          // Export standard ReactDOM APIs
+          export default ReactDOM;
+          export const {
+            render, hydrate, findDOMNode, createPortal, unmountComponentAtNode
+          } = ReactDOM;
+
+          // Export React 18 API polyfills
+          export { createRoot, hydrateRoot };
+          EOL
+      
+      # Clean install dependencies
       - name: Install dependencies
         working-directory: ./frontend
         run: |
           npm ci --legacy-peer-deps --no-audit --no-fund
-          npm install @rollup/plugin-commonjs@latest @rollup/plugin-node-resolve@latest --no-save
       
-      # Copy required fixup files to make sure they exist
-      - name: Ensure JSX runtime fixes exist
+      # Run pre-build asset copying
+      - name: Copy assets
         working-directory: ./frontend
         run: |
-          echo "Ensuring fix files are present..."
-          cat ./src/jsx-runtime-fix.ts || echo "Creating jsx-runtime-fix.ts" 
-          cat ./src/react-dom-fix.ts || echo "Creating react-dom-fix.ts"
+          node scripts/copy-assets.js
       
       # Build with verbose logging
       - name: Build Frontend
         working-directory: ./frontend
         run: |
           echo "Starting build process..."
-          npm run build
+          NODE_ENV=production VITE_BUILD_MODE=azure npm run build
           if [ -d "dist" ]; then
             echo "Build succeeded, contents of dist:"
             ls -la dist
@@ -56,6 +111,15 @@ jobs:
           fi
         env:
           CI: false
+      
+      # Ensure SWA config is in dist
+      - name: Ensure SWA Config
+        working-directory: ./frontend
+        run: |
+          if [ ! -f "dist/staticwebapp.config.json" ]; then
+            echo "Copying Static Web App config to dist folder"
+            cp staticwebapp.config.json dist/
+          fi
       
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
