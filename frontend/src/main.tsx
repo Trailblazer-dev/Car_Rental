@@ -5,7 +5,7 @@ import {
   RouterProvider
 } from 'react-router-dom'
 import './index.css'
-import App from './App.tsx'
+import App from './App'
 
 // Option 1: Using BrowserRouter with future flags
 const router = createBrowserRouter(
