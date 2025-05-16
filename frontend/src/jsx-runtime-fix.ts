@@ -3,20 +3,15 @@
 
 import * as React from 'react';
 
-// Define all JSX runtime functions needed
+// Define all JSX runtime functions needed for both production and development
 export const jsx = React.createElement;
 export const jsxs = React.createElement;
 export const jsxDEV = React.createElement;
 export const Fragment = React.Fragment;
 
-// Add production-specific exports that might be required
+// Additional JSX runtime exports that might be required
 export const createContext = React.createContext;
-export const useState = React.useState;
-export const useEffect = React.useEffect;
-export const useContext = React.useContext;
-export const useMemo = React.useMemo;
-export const useRef = React.useRef;
-export const useCallback = React.useCallback;
+export const useId = React.useId;
 
 // Re-export all of React to ensure compatibility
 const ReactShim = { ...React, jsx, jsxs, jsxDEV, Fragment };
