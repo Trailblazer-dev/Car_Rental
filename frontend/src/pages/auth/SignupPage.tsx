@@ -54,12 +54,9 @@ const SignupPage = () => {
 
       // Navigate to homepage
       navigate('/');
-    } catch (err: any) {
-      console.error('Registration error:', err);
-      setError(
-        err.response?.data?.detail || 
-        'Registration failed. Please try again.'
-      );
+    } catch (err: unknown) {
+      const errorMessage = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      setError(errorMessage || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }

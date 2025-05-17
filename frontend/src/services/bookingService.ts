@@ -19,41 +19,25 @@ export interface BookingRequest {
 
 const bookingService = {
   createBooking: async (bookingData: BookingRequest) => {
-    try {
-      const response = await api.post<Booking>('/api/bookings/', bookingData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post<Booking>('/api/bookings/', bookingData);
+    return response.data;
   },
 
   getUserBookings: async () => {
-    try {
-      const response = await api.get<Booking[]>('/api/bookings/');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get<Booking[]>('/api/bookings/');
+    return response.data;
   },
 
   getBookingById: async (id: number) => {
-    try {
-      const response = await api.get<Booking>(`/api/bookings/${id}/`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get<Booking>(`/api/bookings/${id}/`);
+    return response.data;
   },
 
   cancelBooking: async (id: number) => {
-    try {
-      const response = await api.patch<Booking>(`/api/bookings/${id}/`, {
-        status: false
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.patch<Booking>(`/api/bookings/${id}/`, {
+      status: false
+    });
+    return response.data;
   }
 };
 

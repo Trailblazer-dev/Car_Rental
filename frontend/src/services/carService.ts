@@ -14,30 +14,18 @@ export interface Car {
 
 const carService = {
   getAllCars: async () => {
-    try {
-      const response = await api.get<Car[]>('/api/cars/');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get<Car[]>('/api/cars/');
+    return response.data;
   },
 
   getCarById: async (id: number) => {
-    try {
-      const response = await api.get<Car>(`/api/cars/${id}/`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get<Car>(`/api/cars/${id}/`);
+    return response.data;
   },
 
   searchCars: async (params: Record<string, string>) => {
-    try {
-      const response = await api.get<Car[]>('/api/cars/', { params });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get<Car[]>('/api/cars/', { params });
+    return response.data;
   }
 };
 

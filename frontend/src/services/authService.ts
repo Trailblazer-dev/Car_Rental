@@ -20,24 +20,15 @@ interface AuthResponse {
 
 const authService = {
   login: async (credentials: LoginCredentials) => {
-    try {
-      const response = await api.post<AuthResponse>('/api/token/', credentials);
-      localStorage.setItem('token', response.data.access);
-      localStorage.setItem('refreshToken', response.data.refresh);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post<AuthResponse>('/api/token/', credentials);
+    localStorage.setItem('token', response.data.access);
+    localStorage.setItem('refreshToken', response.data.refresh);
+    return response.data;
   },
 
   register: async (data: RegisterData) => {
-    try {
-      // Use the correct registration endpoint
-      const response = await api.post('/api/register/', data);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post('/api/register/', data);
+    return response.data;
   },
 
   logout: () => {

@@ -23,12 +23,9 @@ const LoginPage = () => {
       await authService.login({ username, password });
       // Navigate to the page the user was trying to access or home
       navigate(from, { replace: true });
-    } catch (err: any) {
-      console.error('Login error:', err);
-      setError(
-        err.response?.data?.detail || 
-        'Login failed. Please check your credentials and try again.'
-      );
+    } catch (err: unknown) {
+      const errorMessage = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      setError(errorMessage || 'Login failed. Please check your credentials and try again.');
     } finally {
       setIsLoading(false);
     }
