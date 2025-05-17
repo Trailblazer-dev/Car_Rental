@@ -24,6 +24,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Clear npm cache
+        run: npm cache clean --force
+
+      - name: Upgrade outdated dependencies
+        run: npm install -g npm-check-updates && ncu -u
+
       - name: Debug - List directory structure
         run: |
           echo "Repository structure:"
