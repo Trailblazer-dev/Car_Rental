@@ -5,14 +5,15 @@ import tailwindcss from "@tailwindcss/vite"
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  base: "/Car_Rental/", // Add this line - should match repository name
   resolve: {
     alias: {
-      '@': '/src',
-      '@components': '/src/components',
-      '@pages': '/src/pages',
-      '@services': '/src/services',
-      '@utils': '/src/utils',
-      '@assets': '/src/assets',
+      "@": "/src",
+      "@components": "/src/components",
+      "@pages": "/src/pages",
+      "@services": "/src/services",
+      "@utils": "/src/utils",
+      "@assets": "/src/assets",
     },
   },
 });

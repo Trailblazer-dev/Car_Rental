@@ -9,7 +9,8 @@ import App from './App.tsx'
 
 // Create router
 const router = createBrowserRouter(
-  [{ path: "*", element: <App /> }]
+  [{ path: "*", element: <App /> }],
+  { basename: "/Car_Rental" } // Add this line - should match repository name
 );
 
 createRoot(document.getElementById('root')!).render(
