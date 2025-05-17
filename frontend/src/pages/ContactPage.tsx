@@ -155,7 +155,7 @@ const ContactPage = () => {
             {/* Here we'd usually include a map component */}
             <div className="bg-gray-200 rounded-lg overflow-hidden">
               <img 
-                src="/src/assets/map.jpg" 
+                src="/assets/map.jpg" 
                 alt="Office location map" 
                 className="w-full h-48 object-cover"
                 onError={(e) => {

@@ -31,22 +31,14 @@ const LandingPage = () => {
             </div>
             <div className="hidden md:block">
               <img 
-                src="/src/assets/hero.png" 
+                src="/assets/hero.png" 
                 alt="Luxury car" 
                 className="w-full h-auto rounded-lg shadow-2xl"
                 onError={(e) => {
-                  // Try a specific fallback image from assets folder
-                  e.currentTarget.src = "/src/assets/car-placeholder.jpg";
-                  
-                  // If that also fails, try a generic fallback from assets
+                  e.currentTarget.src = "/assets/car-placeholder.jpg";
                   e.currentTarget.onerror = () => {
-                    e.currentTarget.src = "/src/assets/default-car.jpg";
-                    
-                    // If all local assets fail, only then use an external placeholder
-                    e.currentTarget.onerror = () => {
-                      e.currentTarget.src = "https://placehold.co/600x400?text=Car+Image";
-                      e.currentTarget.onerror = null; // Prevent infinite loop
-                    };
+                    e.currentTarget.src = "https://placehold.co/600x400?text=Car+Image";
+                    e.currentTarget.onerror = null;
                   };
                 }}
               />
@@ -139,7 +131,7 @@ const LandingPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <div className="bg-white p-4 rounded-lg shadow-md overflow-hidden">
               <img 
-                src="/src/assets/car2.png" 
+                src="/assets/car2.png" 
                 alt="SUV" 
                 className="w-full h-48 object-cover rounded-t-lg"
                 onError={(e) => {
@@ -158,7 +150,7 @@ const LandingPage = () => {
             
             <div className="bg-white p-4 rounded-lg shadow-md overflow-hidden">
               <img 
-                src="/src/assets/car1.png" 
+                src="/assets/car1.png" 
                 alt="Sedan" 
                 className="w-full h-48 object-cover rounded-t-lg"
                 onError={(e) => {
@@ -177,7 +169,7 @@ const LandingPage = () => {
             
             <div className="bg-white p-4 rounded-lg shadow-md overflow-hidden">
               <img 
-                src="/src/assets/car3.jpg" 
+                src="/assets/car3.jpg" 
                 alt="Sports Car" 
                 className="w-full h-48 object-cover rounded-t-lg"
                 onError={(e) => {

@@ -36,7 +36,8 @@ const CarCard = ({
   const handleImageError = () => {
     if (imageError) return;
     setImageError(true);
-    setImageSrc("/src/assets/car-placeholder.jpg");
+    // Updated path to public/assets folder
+    setImageSrc("/assets/placeholder-car.jpg");
   };
 
   return (

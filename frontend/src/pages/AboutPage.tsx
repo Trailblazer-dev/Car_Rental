@@ -17,7 +17,7 @@ const AboutPage = () => {
           </div>
           <div className="rounded-lg overflow-hidden shadow-lg">
             <img 
-              src="/src/assets/car-car-park.jpg" 
+              src="/assets/car-car-park.jpg" 
               alt="CarHire team" 
               className="w-full h-auto"
               onError={(e) => {
@@ -92,7 +92,7 @@ const AboutPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           <div className="bg-white rounded-lg overflow-hidden shadow-md">
             <img 
-              src="/src/assets/ceo.jpg" 
+              src="/assets/ceo.jpg" 
               alt="Sarah Johnson, CEO" 
               className="w-full h-64 object-cover"
               onError={(e) => {
@@ -110,7 +110,7 @@ const AboutPage = () => {
           
           <div className="bg-white rounded-lg overflow-hidden shadow-md">
             <img 
-              src="/src/assets/op.jpg" 
+              src="/assets/op.jpg" 
               alt="Michael Chen, Operations Director" 
               className="w-full h-64 object-cover"
               onError={(e) => {
@@ -128,7 +128,7 @@ const AboutPage = () => {
           
           <div className="bg-white rounded-lg overflow-hidden shadow-md">
             <img 
-              src="/src/assets/cs.png" 
+              src="/assets/cs.png" 
               alt="Lisa Okoye, Customer Service Manager" 
               className="w-full h-64 object-cover"
               onError={(e) => {

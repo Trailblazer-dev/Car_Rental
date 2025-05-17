@@ -56,8 +56,8 @@ const CarDetail = () => {
   };
   
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    // Try to use a local asset as fallback first
-    e.currentTarget.src = "/src/assets/car-detail-placeholder.jpg";
+    // Updated path to public/assets folder
+    e.currentTarget.src = "/assets/car-detail-placeholder.jpg";
     
     // Add a second error handler in case the local asset also fails
     e.currentTarget.onerror = () => {

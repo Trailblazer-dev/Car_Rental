@@ -9,5 +9,18 @@
   "routes": [
     { "handle": "filesystem" },
     { "src": "/.*", "dest": "/index.html" }
-  ]
+  ],
+  "images": {
+    "sizes": [640, 750, 828, 1080, 1200],
+    "domains": ["localhost", "your-backend-api-url.com"],
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "**"
+      }
+    ]
+  },
+  "github": {
+    "silent": true
+  }
 }

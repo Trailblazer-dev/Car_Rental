@@ -67,7 +67,7 @@ api.interceptors.response.use(
 // Improved helper to get the complete image URL for Django media files
 export const getImageUrl = (relativePath: string) => {
   if (!relativePath) {
-    return "/src/assets/car-placeholder.jpg";
+    return "/assets/placeholder-car.jpg"; // Updated path to public/assets folder
   }
   
   // If it's already a full URL
@@ -75,14 +75,17 @@ export const getImageUrl = (relativePath: string) => {
     return relativePath;
   }
   
-  // If it's a local asset path
-  if (relativePath.startsWith('/src/') || relativePath.startsWith('@/')) {
-    // In production, these paths need to be handled differently
-    if (import.meta.env.PROD) {
-      const assetName = relativePath.split('/').pop();
-      return `/${assetName}`;
-    }
-    return relativePath;
+  // If it's a relative path starting with /
+  if (relativePath.startsWith('/')) {
+    // Remove the leading slash if present
+    relativePath = relativePath.replace(/^\//, '');
+  }
+  
+  // Handle paths that include src/assets or @/assets
+  if (relativePath.includes('src/assets/') || relativePath.includes('@/assets/')) {
+    // Extract just the filename
+    const fileName = relativePath.split('/').pop() || 'placeholder-car.jpg';
+    return `/assets/${fileName}`; // Updated path to public/assets folder
   }
   
   // Handle image path from Django - ensure we're using /media/ prefix
