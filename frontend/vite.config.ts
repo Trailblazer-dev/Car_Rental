@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite"
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: "/Car_Rental/", // Add this line - should match repository name
+  base: "/Car_Rental/", // Make sure this matches your repository name
   resolve: {
     alias: {
       "@": "/src",
